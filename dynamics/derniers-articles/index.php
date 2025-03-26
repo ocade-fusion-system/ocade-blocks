@@ -33,7 +33,7 @@ function render_derniers_articles($attributes) {
   ob_start();
 
   $categoryPrincipal = get_the_category();
-  $categoryPrincipal = $categoryPrincipal[0]->name;
+  $categoryPrincipal = $categoryPrincipal[0]->name ?? '';
 ?>
 
   <ul <?= $wrapper_attributes; ?>>
