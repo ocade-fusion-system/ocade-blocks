@@ -22,15 +22,21 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 5.5rem;
-  height: 3.5rem;
+  width: 4rem;
+  height: 2.5rem;
   background-color: red;
   background-image: url("data:image/svg+xml;utf8,<svg fill='white' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path d='M8 5v14l11-7z'/></svg>");
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 2.5rem;
+  background-size: 1.75rem;
   border-radius: 10px;
   transform: translate(-50%, -50%);
+
+  @media (min-width: 600px) {
+    width: 5.5rem;
+    height: 3.5rem;
+    background-size: 2.5rem;
+  }
 }
 
 .wp-block-ocade-blocks-youtube-lite.is-playing {
@@ -42,4 +48,3 @@
   outline: 3px solid var(--wp--preset--color--violet);
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
-
