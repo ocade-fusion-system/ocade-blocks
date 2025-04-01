@@ -62,19 +62,24 @@ jobs:
         run: |
           npm install -g uglify-js clean-css-cli
 
-      - name: Create build directory and copy files
+      - name: Create build-release directory and copy files
         run: |
-          mkdir build
-          rsync -a --exclude='.git*' --exclude='.github' --exclude='*.zip' --exclude='README.md' ./ ./build/
+          mkdir build-release
+          rsync -a --exclude='.git*' --exclude='.github' --exclude='*.zip' --exclude='README.md' ./ ./build-release/
 
       - name: Minify JS and CSS files
         run: |
-          find build -name "*.js" -not -name "*.min.js" -exec bash -c 'uglifyjs "$0" -o "${0%.js}.min.js"' {} \;
-          find build -name "*.css" -not -name "*.min.css" -exec bash -c 'cleancss -o "${0%.css}.min.css" "$0"' {} \;
+          find build-release -name "*.js" -not -name "*.min.js" -exec bash -c 'uglifyjs "$0" -o "${0%.js}.min.js"' {} \;
+          find build-release -name "*.css" -not -name "*.min.css" -exec bash -c 'cleancss -o "${0%.css}.min.css" "$0"' {} \;
+
+      - name: Replace original JS and CSS with minified versions
+        run: |
+          find build-release -name "*.min.js" -exec bash -c 'mv "$0" "${0%.min.js}.js"' {} \;
+          find build-release -name "*.min.css" -exec bash -c 'mv "$0" "${0%.min.css}.css"' {} \;
 
       - name: Create Plugin ZIP
         run: |
-          cd build
+          cd build-release
           zip -r ../ocade-blocks.zip * .[^.]* || true
           cd ..
 
