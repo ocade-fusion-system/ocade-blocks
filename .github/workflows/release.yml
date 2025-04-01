@@ -16,7 +16,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Récupérer tout l'historique Git, y compris les tags
+          fetch-depth: 0
 
       - name: Fetch Tags
         run: |
@@ -52,24 +52,25 @@ jobs:
       - name: Create version.txt
         run: echo $VERSION > version.txt
 
-      - name: Minify JavaScript
-        uses: nizarmah/auto-minify-js@v1
+      - name: Cache NPM dependencies
+        uses: actions/cache@v3
         with:
-          directory: './'
-          include-original: true
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-cache
 
-      - name: Minify CSS
-        uses: nizarmah/auto-minify-css@main
-        with:
-          directory: './'
-          include-original: true
+      - name: Install minification tools
+        run: |
+          npm install -g uglify-js clean-css-cli
 
-      - name: Copy minified files to build directory
+      - name: Create build directory and copy files
         run: |
           mkdir build
-          rsync -a --exclude='*.js' --exclude='*.css' --exclude='.git*' --exclude='.github' --exclude='README.md' --exclude='*.zip' ./ ./build/
-          find . -name '*.min.js' -exec cp --parents {} build/ \;
-          find . -name '*.min.css' -exec cp --parents {} build/ \;
+          rsync -a --exclude='.git*' --exclude='.github' --exclude='*.zip' --exclude='README.md' ./ ./build/
+
+      - name: Minify JS and CSS files
+        run: |
+          find build -name "*.js" -not -name "*.min.js" -exec bash -c 'uglifyjs "$0" -o "${0%.js}.min.js"' {} \;
+          find build -name "*.css" -not -name "*.min.css" -exec bash -c 'cleancss -o "${0%.css}.min.css" "$0"' {} \;
 
       - name: Create Plugin ZIP
         run: |
