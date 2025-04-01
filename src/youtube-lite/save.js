@@ -24,8 +24,8 @@ export default function save({ attributes }) {
     description: videoDescription || "Description de la vidéo non renseignée.",
     thumbnailUrl: `https://img.youtube.com/vi/${videoId}/0.jpg`,
     uploadDate: videoDateCreation
-    ? new Date(videoDateCreation).toISOString()
-    : new Date().toISOString(),
+      ? new Date(videoDateCreation).toISOString()
+      : new Date().toISOString(),
     embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}`,
     contentUrl: urlPageSite || "",
   };
@@ -39,12 +39,26 @@ export default function save({ attributes }) {
         aria-label="Lire la vidéo YouTube"
         data-video-id={videoId}
         data-video-lazyloading={lazyLoading ? "lazy" : "eager"}
-        style={{
-          backgroundImage: `url(${imageURL})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
+      >
+        <img
+          src={imageURL}
+          srcSet={`
+      https://img.youtube.com/vi/${videoId}/sddefault.jpg 640w,
+      https://img.youtube.com/vi/${videoId}/hqdefault.jpg 480w,
+      https://img.youtube.com/vi/${videoId}/mqdefault.jpg 320w,
+      https://img.youtube.com/vi/${videoId}/default.jpg 120w
+    `}
+          sizes="(max-width: 600px) 100vw, 600px"
+          alt={videoTitle || "Miniature de la vidéo YouTube"}
+          loading={lazyLoading ? "lazy" : "eager"}
+          style={{
+            width: "100%",
+            height: "auto",
+            display: "block",
+            objectFit: "cover",
+          }}
+        />
+      </div>
       <script type="application/ld+json">
         {JSON.stringify(structuredData)}
       </script>
