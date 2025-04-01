@@ -28,28 +28,6 @@ function ocadefusion_get_recent_articles_query($nombre_articles = 10) {
   return new WP_Query($args);
 }
 
-/**
- * Ajoute un preload de l'image LCP (le premier article) pour améliorer le score Lighthouse.
- */
-function ocadefusion_preload_lcp_image() {
-  // Préchargement uniquement sur la page d’accueil (à adapter si besoin)
-  if (!is_main_query() || !is_front_page()) return;
-
-  $query = ocadefusion_get_recent_articles_query(1);
-
-  if ($query->have_posts()) {
-    $query->the_post();
-
-    $image_url = get_the_post_thumbnail_url(get_the_ID(), 'medium');
-
-    if ($image_url) echo '<link rel="preload" as="image" href="' . esc_url($image_url) . '" fetchpriority="high">' . "\n";
-
-    wp_reset_postdata();
-  }
-}
-add_action('wp_head', 'ocadefusion_preload_lcp_image');
-
-
 function render_derniers_articles($attributes) {
   extract($attributes);
   $wrapper_attributes = get_block_wrapper_attributes();
@@ -62,39 +40,45 @@ function render_derniers_articles($attributes) {
   ob_start();
 ?>
   <ul <?= $wrapper_attributes; ?>>
-    <?php $index = 0;
-    while ($query->have_posts()) : $query->the_post(); ?>
+    <?php
+    $index = 0;
+    while ($query->have_posts()) : $query->the_post();
+
+      // Récupère les infos de l’image (format medium)
+      $image_id = get_post_thumbnail_id();
+      $image_src = wp_get_attachment_image_src($image_id, 'medium');
+      $image_alt = esc_attr(get_post_meta($image_id, '_wp_attachment_image_alt', true));
+
+      $loading = ($index === 0) ? 'eager' : 'lazy';
+      $priority = ($index === 0) ? 'high' : 'auto';
+    ?>
       <li>
         <article>
           <a class="figure-link" href="<?= esc_url(get_the_permalink()); ?>" aria-label="Lire l’article : <?= esc_attr(get_the_title()); ?>" rel="nofollow">
             <figure>
-              <?= get_the_post_thumbnail(
-                get_the_ID(),
-                'medium',
-                [
-                  'alt' => esc_attr(get_post_meta(get_post_thumbnail_id(), '_wp_attachment_image_alt', true)),
-                  'loading' => $index === 0 ? 'eager' : 'lazy',
-                  'fetchpriority' => $index === 0 ? 'high' : 'auto',
-                  'decoding' => $index === 0 ? 'sync' : 'async'
-                ]
-              ); ?>
+              <?php if ($image_src) : ?>
+                <img
+                  src="<?= esc_url($image_src[0]); ?>"
+                  width="<?= esc_attr($image_src[1]); ?>"
+                  height="<?= esc_attr($image_src[2]); ?>"
+                  alt="<?= $image_alt; ?>"
+                  loading="<?= $loading; ?>"
+                  fetchpriority="<?= $priority; ?>"
+                  decoding="sync">
+              <?php endif; ?>
             </figure>
           </a>
           <div>
             <header>
               <span>
-                <a href="<?= esc_url(get_category_link(get_the_category()[0]->term_id)); ?>"
-                  aria-label="Catégorie : <?= esc_attr(get_the_category()[0]->name); ?>">
+                <a href="<?= esc_url(get_category_link(get_the_category()[0]->term_id)); ?>" aria-label="Catégorie : <?= esc_attr(get_the_category()[0]->name); ?>">
                   <?= esc_html(get_the_category()[0]->name); ?>
                 </a>
               </span>
-              <time datetime="<?= get_the_date('Y-m-d'); ?>">
-                <?= esc_html(get_the_date('d.m.Y')); ?>
-              </time>
+              <time datetime="<?= get_the_date('Y-m-d'); ?>"><?= esc_html(get_the_date('d.m.Y')); ?></time>
             </header>
             <h3>
-              <a href="<?= esc_url(get_the_permalink()); ?>"
-                aria-label="Lire l’article : <?= esc_attr(get_the_title()); ?>">
+              <a href="<?= esc_url(get_the_permalink()); ?>" aria-label="Lire l’article : <?= esc_attr(get_the_title()); ?>">
                 <?= esc_html(get_the_title()); ?>
               </a>
             </h3>
@@ -104,16 +88,13 @@ function render_derniers_articles($attributes) {
             <?php if ($tags) : ?>
               <div class="news-tags">
                 <?php foreach ($tags as $tag) : ?>
-                  <a href="<?= esc_url(get_tag_link($tag->term_id)); ?>" class="news-tag">
-                    #<?= esc_html($tag->name); ?>
-                  </a>
+                  <a href="<?= esc_url(get_tag_link($tag->term_id)); ?>" class="news-tag">#<?= esc_html($tag->name); ?></a>
                 <?php endforeach; ?>
               </div>
             <?php endif; ?>
 
             <footer>
-              <a href="<?= esc_url(get_the_permalink()); ?>"
-                aria-label="Lire la suite de l’article : <?= esc_attr(get_the_title()); ?>" rel="nofollow">
+              <a href="<?= esc_url(get_the_permalink()); ?>" aria-label="Lire la suite de l’article : <?= esc_attr(get_the_title()); ?>" rel="nofollow">
                 Lire la suite
               </a>
             </footer>
