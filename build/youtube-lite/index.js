@@ -380,13 +380,25 @@ function save({
     tabIndex: "0",
     "aria-label": "Lire la vid\xE9o YouTube",
     "data-video-id": videoId,
-    "data-video-lazyloading": lazyLoading ? "lazy" : "eager",
+    "data-video-lazyloading": lazyLoading ? "lazy" : "eager"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    src: imageURL,
+    srcSet: `
+      https://img.youtube.com/vi/${videoId}/sddefault.jpg 640w,
+      https://img.youtube.com/vi/${videoId}/hqdefault.jpg 480w,
+      https://img.youtube.com/vi/${videoId}/mqdefault.jpg 320w,
+      https://img.youtube.com/vi/${videoId}/default.jpg 120w
+    `,
+    sizes: "(max-width: 600px) 100vw, 600px",
+    alt: videoTitle || "Miniature de la vidéo YouTube",
+    loading: lazyLoading ? "lazy" : "eager",
     style: {
-      backgroundImage: `url(${imageURL})`,
-      backgroundSize: "cover",
-      backgroundPosition: "center"
+      width: "100%",
+      height: "auto",
+      display: "block",
+      objectFit: "cover"
     }
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("script", {
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("script", {
     type: "application/ld+json"
   }, JSON.stringify(structuredData)));
 }
