@@ -396,7 +396,8 @@ function save({
       width: "100%",
       height: "auto",
       display: "block",
-      objectFit: "cover"
+      objectFit: "cover",
+      aspectRatio: "16 / 9"
     }
   })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("script", {
     type: "application/ld+json"
