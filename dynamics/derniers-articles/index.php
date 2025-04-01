@@ -1,44 +1,69 @@
 <?php
 
-function render_derniers_articles($attributes) {
-  extract($attributes);
-  $wrapper_attributes = get_block_wrapper_attributes();
-
-  // Récupération des X derniers articles
-  $nombre_articles = 10;
-
-  $args = array(
-    'post_type' => 'post',
+/**
+ * Retourne une WP_Query pour les derniers articles avec filtres dynamiques.
+ *
+ * @param int $nombre_articles Nombre d'articles à récupérer
+ * @return WP_Query
+ */
+function ocadefusion_get_recent_articles_query($nombre_articles = 10) {
+  $args = [
+    'post_type'      => 'post',
     'posts_per_page' => $nombre_articles,
-    'orderby' => 'date',
-    'order' => 'DESC',
-    'status' => 'publish'
-  );
+    'orderby'        => 'date',
+    'order'          => 'DESC',
+    'post_status'    => 'publish',
+  ];
 
   if (is_category()) {
     $category = get_queried_object();
-    if ($category) $args['category__in'] = array($category->term_id);
+    if ($category) $args['category__in'] = [$category->term_id];
   }
 
   if (is_tag()) {
     $tag = get_queried_object();
-    if ($tag) $args['tag__in'] = array($tag->term_id);
+    if ($tag) $args['tag__in'] = [$tag->term_id];
   }
 
-  $query = new WP_Query($args);
+  return new WP_Query($args);
+}
+
+/**
+ * Ajoute un preload de l'image LCP (le premier article) pour améliorer le score Lighthouse.
+ */
+function ocadefusion_preload_lcp_image() {
+  // Préchargement uniquement sur la page d’accueil (à adapter si besoin)
+  if (!is_main_query() || !is_front_page()) return;
+
+  $query = ocadefusion_get_recent_articles_query(1);
+
+  if ($query->have_posts()) {
+    $query->the_post();
+
+    $image_url = get_the_post_thumbnail_url(get_the_ID(), 'medium');
+
+    if ($image_url) echo '<link rel="preload" as="image" href="' . esc_url($image_url) . '" fetchpriority="high">' . "\n";
+
+    wp_reset_postdata();
+  }
+}
+add_action('wp_head', 'ocadefusion_preload_lcp_image');
+
+
+function render_derniers_articles($attributes) {
+  extract($attributes);
+  $wrapper_attributes = get_block_wrapper_attributes();
+
+  $nombre_articles = 10;
+  $query = ocadefusion_get_recent_articles_query($nombre_articles);
 
   if (!$query->have_posts()) return '';
 
-  // Génération du rendu
   ob_start();
-
-  $categoryPrincipal = get_the_category();
-  $categoryPrincipal = $categoryPrincipal[0]->name ?? '';
 ?>
-
   <ul <?= $wrapper_attributes; ?>>
     <?php $index = 0;
-    while (have_posts()) : the_post(); ?>
+    while ($query->have_posts()) : $query->the_post(); ?>
       <li>
         <article>
           <a class="figure-link" href="<?= esc_url(get_the_permalink()); ?>" aria-label="Lire l’article : <?= esc_attr(get_the_title()); ?>" rel="nofollow">
@@ -98,6 +123,7 @@ function render_derniers_articles($attributes) {
     <?php $index++;
     endwhile; ?>
   </ul>
-
-<?php return ob_get_clean();
+<?php
+  wp_reset_postdata();
+  return ob_get_clean();
 }
