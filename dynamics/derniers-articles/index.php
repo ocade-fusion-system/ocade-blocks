@@ -37,12 +37,22 @@ function render_derniers_articles($attributes) {
 ?>
 
   <ul <?= $wrapper_attributes; ?>>
-    <?php while (have_posts()) : the_post(); ?>
+    <?php $index = 0;
+    while (have_posts()) : the_post(); ?>
       <li>
         <article>
           <a class="figure-link" href="<?= esc_url(get_the_permalink()); ?>" aria-label="Lire l’article : <?= esc_attr(get_the_title()); ?>" rel="nofollow">
             <figure>
-              <?= get_the_post_thumbnail(get_the_ID(), 'medium', ['alt' => esc_attr(get_post_meta(get_post_thumbnail_id(), '_wp_attachment_image_alt', true)), 'loading' => 'lazy']); ?>
+              <?= get_the_post_thumbnail(
+                get_the_ID(),
+                'medium',
+                [
+                  'alt' => esc_attr(get_post_meta(get_post_thumbnail_id(), '_wp_attachment_image_alt', true)),
+                  'loading' => $index === 0 ? 'eager' : 'lazy',
+                  'fetchpriority' => $index === 0 ? 'high' : 'auto',
+                  'decoding' => $index === 0 ? 'sync' : 'async'
+                ]
+              ); ?>
             </figure>
           </a>
           <div>
@@ -64,9 +74,9 @@ function render_derniers_articles($attributes) {
               </a>
             </h3>
             <p><?= esc_html(get_the_excerpt()); ?></p>
-            <?php
-            $tags = get_the_tags();
-            if ($tags) : ?>
+
+            <?php $tags = get_the_tags(); ?>
+            <?php if ($tags) : ?>
               <div class="news-tags">
                 <?php foreach ($tags as $tag) : ?>
                   <a href="<?= esc_url(get_tag_link($tag->term_id)); ?>" class="news-tag">
@@ -75,6 +85,7 @@ function render_derniers_articles($attributes) {
                 <?php endforeach; ?>
               </div>
             <?php endif; ?>
+
             <footer>
               <a href="<?= esc_url(get_the_permalink()); ?>"
                 aria-label="Lire la suite de l’article : <?= esc_attr(get_the_title()); ?>" rel="nofollow">
@@ -84,11 +95,9 @@ function render_derniers_articles($attributes) {
           </div>
         </article>
       </li>
-    <?php endwhile; ?>
+    <?php $index++;
+    endwhile; ?>
   </ul>
-
-
-
 
 <?php return ob_get_clean();
 }
