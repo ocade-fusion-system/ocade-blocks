@@ -7,7 +7,7 @@
  * Author Name: Valentin Charrier
  * Description: Plugins de blocks Gutenberg pour le site Ocade Fusion.
  * Text Domain: ocade-blocks
- * Version: 1.0.46
+ * Version: 1.0.47
  */
 
 require_once plugin_dir_path(__FILE__) . 'inc/plugin-updater.php';
