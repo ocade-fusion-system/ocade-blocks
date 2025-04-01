@@ -53,13 +53,13 @@ jobs:
         run: echo $VERSION > version.txt
 
       - name: Minify JavaScript
-        uses: nizarmah/auto-minify-js@v2
+        uses: nizarmah/auto-minify-js@v1
         with:
           directory: './'
           include-original: true
 
       - name: Minify CSS
-        uses: nizarmah/auto-minify-css@v1
+        uses: nizarmah/auto-minify-css@main
         with:
           directory: './'
           include-original: true
