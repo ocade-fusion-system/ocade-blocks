@@ -56,6 +56,7 @@ export default function save({ attributes }) {
             height: "auto",
             display: "block",
             objectFit: "cover",
+            aspectRatio: "16 / 9",
           }}
         />
       </div>
