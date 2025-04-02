@@ -8,6 +8,11 @@
 		"build": "wp-scripts build",
 		"start": "wp-scripts start"
 	},
+	"private": true,
+	"dependencies": {
+		"clean-css-cli": "^5.5.0",
+    "terser": "^5.20.0"
+	},
 	"devDependencies": {
 		"@wordpress/scripts": "^27.1.0"
 	}

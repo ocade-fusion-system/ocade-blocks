@@ -1,4 +1,4 @@
-name: Build and Release Theme
+name: Build and Release Plugin
 
 on:
   push:
@@ -16,31 +16,25 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Récupérer tout l'historique Git, y compris les tags
+          fetch-depth: 0
 
       - name: Fetch Tags
         run: |
-          git fetch --tags  # Récupérer les tags distants
-          git tag           # Afficher les tags récupérés (debug)
+          git fetch --tags
+          git tag
 
       - name: Get and Increment Version
         id: get_version
         run: |
-          # Obtenir le dernier tag existant ou démarrer à 1.0.0
           LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "1.0.0")
           echo "Dernière version : $LAST_TAG"
-
-          # Incrément automatique (version patch)
           IFS='.' read -r MAJOR MINOR PATCH <<< "$LAST_TAG"
           PATCH=$((PATCH + 1))
           NEW_VERSION="$MAJOR.$MINOR.$PATCH"
-
-          # Vérifier si le tag existe déjà
           while git rev-parse "refs/tags/$NEW_VERSION" >/dev/null 2>&1; do
             PATCH=$((PATCH + 1))
             NEW_VERSION="$MAJOR.$MINOR.$PATCH"
           done
-
           echo "Nouvelle version : $NEW_VERSION"
           echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
@@ -48,19 +42,39 @@ jobs:
         run: |
           echo "Avant modification :"
           cat ocade-blocks.php
-
-          # Mise à jour de la version dans ocade-blocks.php
           sed -i "s/\(Version:\s*\)[0-9.]*/\1$VERSION/" ocade-blocks.php
-
           echo "Après modification :"
           cat ocade-blocks.php
 
       - name: Create version.txt
         run: echo $VERSION > version.txt
 
+      - name: Setup Node.js with npm cache
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prepare release build folder
+        run: |
+          mkdir release-build
+          rsync -a --exclude=".git" --exclude=".github" --exclude="README.md" --exclude="*.zip" ./ release-build/
+
+      - name: Minify all JS and CSS (including style.css)
+        run: |
+          # Minify JS files
+          find release-build -type f -name "*.js" -exec ./node_modules/.bin/terser "{}" -o "{}" \;
+
+          # Minify all CSS files, including any named style.css
+          find release-build -type f -name "*.css" -exec ./node_modules/.bin/cleancss -o "{}" "{}" \;
+
       - name: Create Plugin ZIP
         run: |
-          zip -r ocade-blocks.zip * .[^.]* -x ".git/*" ".github/*" "README.md" "*.zip"
+          cd release-build
+          zip -r ../ocade-blocks.zip * .[^.]*
 
       - name: Commit Changes
         run: |
