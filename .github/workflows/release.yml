@@ -57,7 +57,11 @@ jobs:
 
       - name: Minify CSS in styles/
         run: |
-          find styles -type f -name "*.css" -exec ./node_modules/.bin/cleancss -o "{}" "{}" \;
+          for file in $(find styles -type f -name "*.css"); do
+            echo "Minifying: $file"
+            ./node_modules/.bin/cleancss "$file" -o "${file}.min"
+            mv "${file}.min" "$file"
+          done
 
       - name: Create Plugin ZIP
         run: |
