@@ -10,8 +10,7 @@
   },
   "private": true,
   "devDependencies": {
-    "@wordpress/scripts": "^27.1.0",
-    "clean-css-cli": "^5.5.0"
+    "@wordpress/scripts": "^27.1.0"
   },
   "dependencies": {
     "clean-css-cli": "^5.5.0"
