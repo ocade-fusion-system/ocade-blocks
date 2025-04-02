@@ -10,7 +10,7 @@
  * Version: 1.0.57
  */
 
-require_once plugin_dir_path(__FILE__) . 'inc/plugin-updater.php';
+ if ($pagenow === 'update-core.php') require_once plugin_dir_path(__FILE__) . 'inc/plugin-updater.php'; // Mettre à jour le plugin depuis un dépôt Git
 
 /******************* DEBUT DU PLUGIN *******************************/
 /** Register PHP Loader  */
