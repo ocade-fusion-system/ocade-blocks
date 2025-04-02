@@ -40,41 +40,28 @@ jobs:
 
       - name: Update Version in ocade-blocks.php
         run: |
-          echo "Avant modification :"
-          cat ocade-blocks.php
           sed -i "s/\(Version:\s*\)[0-9.]*/\1$VERSION/" ocade-blocks.php
-          echo "Après modification :"
           cat ocade-blocks.php
 
       - name: Create version.txt
         run: echo $VERSION > version.txt
 
-      - name: Setup Node.js with npm cache
+      - name: Setup Node.js with cache
         uses: actions/setup-node@v3
         with:
           node-version: '18'
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Install clean-css only
+        run: npm ci --omit=dev
 
-      - name: Prepare release build folder
+      - name: Minify CSS in styles/
         run: |
-          mkdir release-build
-          rsync -a --exclude=".git" --exclude=".github" --exclude="README.md" --exclude="*.zip" ./ release-build/
-
-      - name: Minify all JS and CSS (including style.css)
-        run: |
-          # Minify JS files
-          find release-build -type f -name "*.js" -exec ./node_modules/.bin/terser "{}" -o "{}" \;
-
-          # Minify all CSS files, including any named style.css
-          find release-build -type f -name "*.css" -exec ./node_modules/.bin/cleancss -o "{}" "{}" \;
+          find styles -type f -name "*.css" -exec ./node_modules/.bin/cleancss -o "{}" "{}" \;
 
       - name: Create Plugin ZIP
         run: |
-          cd release-build
-          zip -r ../ocade-blocks.zip * .[^.]*
+          zip -r ocade-blocks.zip * .[^.]* -x ".git/*" ".github/*" "README.md" "*.zip"
 
       - name: Commit Changes
         run: |
