@@ -10,7 +10,7 @@
  * Version: 1.0.68
  */
 
-require_once plugin_dir_path(__FILE__) . 'inc/plugin-updater.php';
+if (is_admin()) require_once plugin_dir_path(__FILE__) . 'inc/plugin-updater.php';
 
 /******************* DEBUT DU PLUGIN *******************************/
 /** Register PHP Loader  */
