@@ -88,7 +88,7 @@ function render_derniers_articles($attributes) {
             <?php if ($tags) : ?>
               <div class="news-tags">
                 <?php foreach ($tags as $tag) : ?>
-                  <a href="<?= esc_url(get_tag_link($tag->term_id)); ?>" class="news-tag">#<?= esc_html($tag->name); ?></a>
+                  <a href="<?= esc_url(get_tag_link($tag->term_id)); ?>" class="news-tag"><?= esc_html($tag->name); ?></a>
                 <?php endforeach; ?>
               </div>
             <?php endif; ?>
