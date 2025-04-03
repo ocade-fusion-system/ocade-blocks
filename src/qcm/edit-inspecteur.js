@@ -15,6 +15,7 @@ export default function Inspecteur({ attributes, setAttributes }) {
     return indexes;
   };
 
+  // Met à jour une option et recalcule l’ordre
   const updateOption = (value, index) => {
     const newOptions = [...options];
     newOptions[index] = value;
@@ -24,20 +25,36 @@ export default function Inspecteur({ attributes, setAttributes }) {
     });
   };
 
+  // Ajoute une option uniquement si la dernière n'est pas vide
   const addOption = () => {
-    const newOptions = [...options, ""];
+    if (options.length === 0 || options[options.length - 1].trim() !== "") {
+      const newOptions = [...options, ""];
+      setAttributes({
+        options: newOptions,
+        orders: generateRandomOrders(newOptions.length),
+      });
+    } else {
+      alert("Veuillez remplir l’option précédente avant d’en ajouter une nouvelle.");
+    }
+  };
+
+  // Réinitialise les options
+  const resetOptions = () => {
     setAttributes({
-      options: newOptions,
-      orders: generateRandomOrders(newOptions.length),
+      options: [""],
+      orders: [0],
     });
   };
 
   return (
     <>
       <InspectorControls>
-        <PanelBody title="Réglages du QCM">
-          <Button onClick={addOption} variant="secondary">
-            Ajouter une option
+        <PanelBody title="Réglages du QCM" initialOpen={true}>
+          <Button onClick={addOption} variant="secondary" style={{ marginBottom: "0.5rem" }}>
+            ➕ Ajouter une option
+          </Button>
+          <Button onClick={resetOptions} variant="secondary" style={{ backgroundColor: "#f44336", color: "#fff" }}>
+            ♻️ Réinitialiser
           </Button>
         </PanelBody>
       </InspectorControls>

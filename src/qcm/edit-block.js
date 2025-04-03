@@ -1,7 +1,7 @@
-export default function Block(props) {
-	const { blockProps } = props;
-
-	return (
-		<div {...blockProps} ></div>
-	);
+export default function Block({ blockProps }) {
+  return (
+    <div {...blockProps}>
+      <em style={{ color: "#aaa" }}>Réglages du QCM disponibles dans le panneau latéral.</em>
+    </div>
+  );
 }
