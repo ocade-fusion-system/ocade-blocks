@@ -4,6 +4,7 @@ export default function save({ attributes }) {
   const {
     videoId,
     customThumbnail,
+    videoAlt,
     lazyLoading,
     videoTitle,
     videoDescription,
@@ -49,7 +50,7 @@ export default function save({ attributes }) {
       https://img.youtube.com/vi/${videoId}/default.jpg 120w
     `}
           sizes="(max-width: 600px) 100vw, 600px"
-          alt={videoTitle || "Miniature de la vidéo YouTube"}
+          alt={videoAlt || "Aperçu de la vidéo YouTube"}
           loading={lazyLoading ? "lazy" : "eager"}
           style={{
             width: "100%",

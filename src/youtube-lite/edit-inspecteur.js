@@ -14,6 +14,7 @@ export default function Inspecteur({ attributes, setAttributes, clientId }) {
   const {
     videoId,
     customThumbnail,
+    videoAlt,
     lazyLoading,
     videoTitle,
     videoDescription,
@@ -93,6 +94,12 @@ export default function Inspecteur({ attributes, setAttributes, clientId }) {
             </Button>
           </div>
         )}
+        <TextControl
+          label="Texte alternatif"
+          value={videoAlt}
+          onChange={(value) => setAttributes({ videoAlt: value })}
+          help="Texte alternatif pour l’image personnalisée."
+        />
       </PanelBody>
 
       <PanelBody title="Détails de la vidéo" initialOpen={true}>

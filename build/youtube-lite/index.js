@@ -8,7 +8,7 @@
   \*************************************/
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":2,"name":"ocade-blocks/youtube-lite","version":"1.0.0","category":"widgets","keywords":["ocade","youtube","lite","iframe","leger","video"],"textdomain":"ocade-blocks","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","supports":{"anchor":true,"align":["wide","full"],"defaultAlign":"wide"},"attributes":{"preview":{"type":"boolean","default":false},"videoId":{"type":"string"},"customThumbnail":{"type":"string","default":""},"lazyLoad":{"type":"boolean","default":false},"videoTitle":{"type":"string","default":""},"videoDescription":{"type":"string","default":""},"videoDateCreation":{"type":"string","default":""},"urlPageSite":{"type":"string","default":""}},"example":{"attributes":{"preview":true}}}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":2,"name":"ocade-blocks/youtube-lite","version":"1.0.0","category":"widgets","keywords":["ocade","youtube","lite","iframe","leger","video"],"textdomain":"ocade-blocks","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","supports":{"anchor":true,"align":["wide","full"],"defaultAlign":"wide"},"attributes":{"preview":{"type":"boolean","default":false},"videoId":{"type":"string"},"customThumbnail":{"type":"string","default":""},"videoAlt":{"type":"string","default":""},"lazyLoad":{"type":"boolean","default":false},"videoTitle":{"type":"string","default":""},"videoDescription":{"type":"string","default":""},"videoDateCreation":{"type":"string","default":""},"urlPageSite":{"type":"string","default":""}},"example":{"attributes":{"preview":true}}}');
 
 /***/ }),
 
@@ -69,6 +69,7 @@ function Inspecteur({
   const {
     videoId,
     customThumbnail,
+    videoAlt,
     lazyLoading,
     videoTitle,
     videoDescription,
@@ -157,7 +158,14 @@ function Inspecteur({
     style: {
       marginBottom: "2rem"
     }
-  }, "Supprimer l’image"))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
+  }, "Supprimer l’image")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextControl, {
+    label: "Texte alternatif",
+    value: videoAlt,
+    onChange: value => setAttributes({
+      videoAlt: value
+    }),
+    help: "Texte alternatif pour l\u2019image personnalis\xE9e."
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
     title: "D\xE9tails de la vid\xE9o",
     initialOpen: true
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextControl, {
@@ -356,6 +364,7 @@ function save({
   const {
     videoId,
     customThumbnail,
+    videoAlt,
     lazyLoading,
     videoTitle,
     videoDescription,
@@ -390,7 +399,7 @@ function save({
       https://img.youtube.com/vi/${videoId}/default.jpg 120w
     `,
     sizes: "(max-width: 600px) 100vw, 600px",
-    alt: videoTitle || "Miniature de la vidéo YouTube",
+    alt: videoAlt || "Aperçu de la vidéo YouTube",
     loading: lazyLoading ? "lazy" : "eager",
     style: {
       width: "100%",

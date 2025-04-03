@@ -26,6 +26,10 @@
       "type": "string",
       "default": ""
     },
+    "videoAlt": {
+      "type": "string",
+      "default": ""
+    },
     "lazyLoad": {
       "type": "boolean",
       "default": false
