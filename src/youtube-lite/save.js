@@ -44,14 +44,16 @@ export default function save({ attributes }) {
         <img
           src={imageURL}
           srcSet={`
-      https://img.youtube.com/vi/${videoId}/sddefault.jpg 640w,
-      https://img.youtube.com/vi/${videoId}/hqdefault.jpg 480w,
-      https://img.youtube.com/vi/${videoId}/mqdefault.jpg 320w,
-      https://img.youtube.com/vi/${videoId}/default.jpg 120w
-    `}
+    https://img.youtube.com/vi/${videoId}/sddefault.jpg 640w,
+    https://img.youtube.com/vi/${videoId}/hqdefault.jpg 480w,
+    https://img.youtube.com/vi/${videoId}/mqdefault.jpg 320w,
+    https://img.youtube.com/vi/${videoId}/default.jpg 120w
+  `}
           sizes="(max-width: 600px) 100vw, 600px"
           alt={videoAlt || "Aperçu de la vidéo YouTube"}
           loading={lazyLoading ? "lazy" : "eager"}
+          width="640"
+          height="360"
           style={{
             width: "100%",
             height: "auto",
