@@ -53,7 +53,7 @@ export default function Inspecteur({ attributes, setAttributes }) {
           <Button onClick={addOption} variant="secondary" style={{ marginBottom: "0.5rem" }}>
             ➕ Ajouter une option
           </Button>
-          <Button onClick={resetOptions} variant="secondary" style={{ backgroundColor: "#f44336", color: "#fff" }}>
+          <Button onClick={resetOptions} variant="secondary">
             ♻️ Réinitialiser
           </Button>
         </PanelBody>
