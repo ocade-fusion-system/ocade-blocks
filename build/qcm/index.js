@@ -25,13 +25,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
-function Block(props) {
-  const {
-    blockProps
-  } = props;
+function Block({
+  blockProps
+}) {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ...blockProps
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Emplacement r\xE9serv\xE9 au QCM."));
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("em", {
+    style: {
+      color: "#aaa"
+    }
+  }, "R\xE9glages du QCM disponibles dans le panneau lat\xE9ral."));
 }
 
 /***/ }),
@@ -76,6 +79,8 @@ function Inspecteur({
     }
     return indexes;
   };
+
+  // Met à jour une option et recalcule l’ordre
   const updateOption = (value, index) => {
     const newOptions = [...options];
     newOptions[index] = value;
@@ -84,19 +89,44 @@ function Inspecteur({
       orders: generateRandomOrders(newOptions.length)
     });
   };
+
+  // Ajoute une option uniquement si la dernière n'est pas vide
   const addOption = () => {
-    const newOptions = [...options, ""];
+    if (options.length === 0 || options[options.length - 1].trim() !== "") {
+      const newOptions = [...options, ""];
+      setAttributes({
+        options: newOptions,
+        orders: generateRandomOrders(newOptions.length)
+      });
+    } else {
+      alert("Veuillez remplir l’option précédente avant d’en ajouter une nouvelle.");
+    }
+  };
+
+  // Réinitialise les options
+  const resetOptions = () => {
     setAttributes({
-      options: newOptions,
-      orders: generateRandomOrders(newOptions.length)
+      options: [""],
+      orders: [0]
     });
   };
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InspectorControls, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
-    title: "R\xE9glages du QCM"
+    title: "R\xE9glages du QCM",
+    initialOpen: true
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
     onClick: addOption,
-    variant: "secondary"
-  }, "Ajouter une option"))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    variant: "secondary",
+    style: {
+      marginBottom: "0.5rem"
+    }
+  }, "\u2795 Ajouter une option"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+    onClick: resetOptions,
+    variant: "secondary",
+    style: {
+      backgroundColor: "#f44336",
+      color: "#fff"
+    }
+  }, "\u267B\uFE0F R\xE9initialiser"))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps)()
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextControl, {
     label: "Question",
