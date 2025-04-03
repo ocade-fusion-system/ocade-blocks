@@ -39,7 +39,6 @@
     "options": {
       "type": "array",
       "default": [
-        "",
         ""
       ]
     }
