@@ -15,9 +15,6 @@ const CustomIcon = () => (
     preserveAspectRatio="xMidYMid meet"
     version="1.0"
   >
-    <metadata>
-      <ContainsAiGeneratedContent>Yes</ContainsAiGeneratedContent>
-    </metadata>
     <defs>
       <g />
       <clipPath id="02f7f53b99">
