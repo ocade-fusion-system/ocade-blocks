@@ -8,7 +8,7 @@
   \****************************/
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":2,"name":"ocade-blocks/qcm","version":"1.0.0","category":"widgets","keywords":["ocade","qcm","questions","test"],"textdomain":"ocade-blocks","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","supports":{"anchor":true,"align":["wide","full"],"defaultAlign":"wide"},"attributes":{"preview":{"type":"boolean","default":false}},"example":{"attributes":{"preview":true},"question":{"type":"string","default":""},"options":{"type":"array","default":[""]}}}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":2,"name":"ocade-blocks/qcm","version":"1.0.0","category":"widgets","keywords":["ocade","qcm","questions","test"],"textdomain":"ocade-blocks","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","supports":{"anchor":true,"align":["wide","full"],"defaultAlign":"wide"},"attributes":{"preview":{"type":"boolean","default":false},"question":{"type":"string","default":""},"options":{"type":"array","default":[""]},"orders":{"type":"array","default":[]}},"example":{"attributes":{"preview":true}}}');
 
 /***/ }),
 
@@ -64,18 +64,35 @@ function Inspecteur({
     question,
     options
   } = attributes;
+
+  // Génère un ordre aléatoire d'affichage
+  const generateRandomOrders = length => {
+    const indexes = Array.from({
+      length
+    }, (_, i) => i);
+    for (let i = indexes.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [indexes[i], indexes[j]] = [indexes[j], indexes[i]];
+    }
+    return indexes;
+  };
   const updateOption = (value, index) => {
     const newOptions = [...options];
     newOptions[index] = value;
     setAttributes({
-      options: newOptions
+      options: newOptions,
+      orders: generateRandomOrders(newOptions.length)
     });
   };
-  const addOption = () => setAttributes({
-    options: [...options, ""]
-  });
+  const addOption = () => {
+    const newOptions = [...options, ""];
+    setAttributes({
+      options: newOptions,
+      orders: generateRandomOrders(newOptions.length)
+    });
+  };
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InspectorControls, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
-    title: "R\xE9glages du QCL"
+    title: "R\xE9glages du QCM"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
     onClick: addOption,
     variant: "secondary"
@@ -242,46 +259,22 @@ function save({
   attributes
 }) {
   const {
-    question,
-    options
+    question = "",
+    options = [],
+    orders = []
   } = attributes;
-
-  // Générer un ordre aléatoire
-  const orders = options.map((_, index) => index);
-  for (let i = orders.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [orders[i], orders[j]] = [orders[j], orders[i]];
-  }
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save()
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, question)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "qcl-options",
-    style: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '0.5rem'
-    }
-  }, options.map((opt, index) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    key: index,
-    className: "qcl-option",
-    style: {
-      order: orders[index],
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.5rem'
-    }
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "radio",
-    name: "qcl",
-    id: `opt-${index}`,
-    value: opt
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
-    htmlFor: `opt-${index}`
-  }, String.fromCharCode(97 + index), ") ", opt)))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, question)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     onClick: `
-          const container = this.closest('.wp-block-ocade-qcl');
+          const container = this.closest('.wp-block-ocade-blocks-qcm');
+          if (!container) {
+            this.dataset.success = "false";
+            this.dataset.reponse = "false";
+            return;
+          }
           const radios = container.querySelectorAll('input[type="radio"]');
-          let selected = Array.from(radios).find(r => r.checked);
+          const selected = Array.from(radios).find(r => r.checked);
           if (!selected) {
             this.dataset.success = "false";
             this.dataset.reponse = "false";
@@ -292,7 +285,34 @@ function save({
           this.dataset.success = isCorrect ? "true" : "false";
           delete this.dataset.reponse;
         `
-  }, "V\xE9rifier ma r\xE9ponse"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Veuillez cocher une r\xE9ponse avant de r\xE9pondre."));
+  }, "V\xE9rifier ma r\xE9ponse"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "qcl-options",
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "0.5rem"
+    }
+  }, options.map((opt, index) => {
+    var _orders$index;
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      key: index,
+      className: "qcl-option",
+      style: {
+        order: (_orders$index = orders[index]) !== null && _orders$index !== void 0 ? _orders$index : index,
+        // fallback au cas où
+        display: "flex",
+        alignItems: "center",
+        gap: "0.5rem"
+      }
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+      type: "radio",
+      name: "qcl",
+      id: `opt-${index}`,
+      value: opt
+    }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+      htmlFor: `opt-${index}`
+    }, String.fromCharCode(97 + index), ") ", opt));
+  })));
 }
 
 /***/ }),

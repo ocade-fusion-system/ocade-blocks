@@ -18,19 +18,23 @@
     "preview": {
       "type": "boolean",
       "default": false
-    }
-  },
-  "example": {
-    "attributes": {
-      "preview": true
     },
-    "question": {
+		 "question": {
       "type": "string",
       "default": ""
     },
     "options": {
       "type": "array",
       "default": [""]
+    },
+		"orders": {
+    "type": "array",
+    "default": []
+  }
+  },
+  "example": {
+    "attributes": {
+      "preview": true
     }
   }
 }

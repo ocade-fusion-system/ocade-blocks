@@ -5,18 +5,37 @@ import { InspectorControls } from "@wordpress/block-editor";
 export default function Inspecteur({ attributes, setAttributes }) {
   const { question, options } = attributes;
 
+  // Génère un ordre aléatoire d'affichage
+  const generateRandomOrders = (length) => {
+    const indexes = Array.from({ length }, (_, i) => i);
+    for (let i = indexes.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [indexes[i], indexes[j]] = [indexes[j], indexes[i]];
+    }
+    return indexes;
+  };
+
   const updateOption = (value, index) => {
     const newOptions = [...options];
     newOptions[index] = value;
-    setAttributes({ options: newOptions });
+    setAttributes({
+      options: newOptions,
+      orders: generateRandomOrders(newOptions.length),
+    });
   };
 
-  const addOption = () => setAttributes({ options: [...options, ""] });
+  const addOption = () => {
+    const newOptions = [...options, ""];
+    setAttributes({
+      options: newOptions,
+      orders: generateRandomOrders(newOptions.length),
+    });
+  };
 
   return (
     <>
       <InspectorControls>
-        <PanelBody title="Réglages du QCL">
+        <PanelBody title="Réglages du QCM">
           <Button onClick={addOption} variant="secondary">
             Ajouter une option
           </Button>

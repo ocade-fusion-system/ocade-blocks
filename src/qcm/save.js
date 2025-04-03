@@ -1,39 +1,24 @@
-import { useBlockProps } from '@wordpress/block-editor';
+import { useBlockProps } from "@wordpress/block-editor";
 
 export default function save({ attributes }) {
-  const { question, options } = attributes;
-
-  // Générer un ordre aléatoire
-  const orders = options.map((_, index) => index);
-  for (let i = orders.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [orders[i], orders[j]] = [orders[j], orders[i]];
-  }
+  const { question = "", options = [], orders = [] } = attributes;
 
   return (
     <div {...useBlockProps.save()}>
-      <p><strong>{question}</strong></p>
-
-      <div className="qcl-options" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-        {options.map((opt, index) => (
-          <div
-            key={index}
-            className="qcl-option"
-            style={{ order: orders[index], display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-          >
-            <input type="radio" name="qcl" id={`opt-${index}`} value={opt} />
-            <label htmlFor={`opt-${index}`}>
-              {String.fromCharCode(97 + index)}) {opt}
-            </label>
-          </div>
-        ))}
-      </div>
+      <p>
+        <strong>{question}</strong>
+      </p>
 
       <button
         onClick={`
-          const container = this.closest('.wp-block-ocade-qcl');
+          const container = this.closest('.wp-block-ocade-blocks-qcm');
+          if (!container) {
+            this.dataset.success = "false";
+            this.dataset.reponse = "false";
+            return;
+          }
           const radios = container.querySelectorAll('input[type="radio"]');
-          let selected = Array.from(radios).find(r => r.checked);
+          const selected = Array.from(radios).find(r => r.checked);
           if (!selected) {
             this.dataset.success = "false";
             this.dataset.reponse = "false";
@@ -47,7 +32,29 @@ export default function save({ attributes }) {
       >
         Vérifier ma réponse
       </button>
-      <p>Veuillez cocher une réponse avant de répondre.</p>
+
+      <div
+        className="qcl-options"
+        style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
+      >
+        {options.map((opt, index) => (
+          <div
+            key={index}
+            className="qcl-option"
+            style={{
+              order: orders[index] ?? index, // fallback au cas où
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
+          >
+            <input type="radio" name="qcl" id={`opt-${index}`} value={opt} />
+            <label htmlFor={`opt-${index}`}>
+              {String.fromCharCode(97 + index)}) {opt}
+            </label>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

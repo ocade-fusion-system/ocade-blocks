@@ -26,11 +26,6 @@
     "preview": {
       "type": "boolean",
       "default": false
-    }
-  },
-  "example": {
-    "attributes": {
-      "preview": true
     },
     "question": {
       "type": "string",
@@ -41,6 +36,15 @@
       "default": [
         ""
       ]
+    },
+    "orders": {
+      "type": "array",
+      "default": []
+    }
+  },
+  "example": {
+    "attributes": {
+      "preview": true
     }
   }
 }
