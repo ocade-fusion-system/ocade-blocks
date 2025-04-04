@@ -278,55 +278,30 @@ function save({
     options = [],
     orders = []
   } = attributes;
+  if (!question || !options.length) return null;
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save()
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, question)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    onClick: `
-          const container = this.closest('.wp-block-ocade-blocks-qcm');
-          if (!container) {
-            this.dataset.success = "false";
-            this.dataset.reponse = "false";
-            return;
-          }
-          const radios = container.querySelectorAll('input[type="radio"]');
-          const selected = Array.from(radios).find(r => r.checked);
-          if (!selected) {
-            this.dataset.success = "false";
-            this.dataset.reponse = "false";
-            return;
-          }
-
-          const isCorrect = radios[0].checked;
-          this.dataset.success = isCorrect ? "true" : "false";
-          delete this.dataset.reponse;
-        `
-  }, "V\xE9rifier ma r\xE9ponse"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "qcl-options",
-    style: {
-      display: "flex",
-      flexDirection: "column",
-      gap: "0.5rem"
-    }
+    ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save(),
+    "data-checked": "false"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, question)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "qcm-options"
   }, options.map((opt, index) => {
     var _orders$index;
-    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    const inputId = `opt-${index}`;
+    const isBonneReponse = index === 0; // ✅ première réponse renseignée
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+      htmlFor: inputId,
       key: index,
-      className: "qcl-option",
+      className: `qcm-option${isBonneReponse ? " bonne-reponse" : ""}`,
       style: {
-        order: (_orders$index = orders[index]) !== null && _orders$index !== void 0 ? _orders$index : index,
-        // fallback au cas où
-        display: "flex",
-        alignItems: "center",
-        gap: "0.5rem"
+        order: (_orders$index = orders[index]) !== null && _orders$index !== void 0 ? _orders$index : index
       }
     }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
       type: "radio",
-      name: "qcl",
-      id: `opt-${index}`,
-      value: opt
-    }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
-      htmlFor: `opt-${index}`
-    }, String.fromCharCode(97 + index), ") ", opt));
+      name: "qcm",
+      id: inputId,
+      value: opt,
+      onchange: "const wrapper = this.closest('.wp-block-ocade-blocks-qcm'); if (wrapper) wrapper.setAttribute('data-checked', 'true');"
+    }), opt);
   })));
 }
 

@@ -3,57 +3,36 @@ import { useBlockProps } from "@wordpress/block-editor";
 export default function save({ attributes }) {
   const { question = "", options = [], orders = [] } = attributes;
 
+  if (!question || !options.length) return null;
+
   return (
-    <div {...useBlockProps.save()}>
+    <div {...useBlockProps.save()} data-checked="false">
       <p>
         <strong>{question}</strong>
       </p>
 
-      <button
-        onClick={`
-          const container = this.closest('.wp-block-ocade-blocks-qcm');
-          if (!container) {
-            this.dataset.success = "false";
-            this.dataset.reponse = "false";
-            return;
-          }
-          const radios = container.querySelectorAll('input[type="radio"]');
-          const selected = Array.from(radios).find(r => r.checked);
-          if (!selected) {
-            this.dataset.success = "false";
-            this.dataset.reponse = "false";
-            return;
-          }
-
-          const isCorrect = radios[0].checked;
-          this.dataset.success = isCorrect ? "true" : "false";
-          delete this.dataset.reponse;
-        `}
-      >
-        Vérifier ma réponse
-      </button>
-
-      <div
-        className="qcl-options"
-        style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
-      >
-        {options.map((opt, index) => (
-          <div
-            key={index}
-            className="qcl-option"
-            style={{
-              order: orders[index] ?? index, // fallback au cas où
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
-          >
-            <input type="radio" name="qcl" id={`opt-${index}`} value={opt} />
-            <label htmlFor={`opt-${index}`}>
-              {String.fromCharCode(97 + index)}) {opt}
+      <div className="qcm-options">
+        {options.map((opt, index) => {
+          const inputId = `opt-${index}`;
+          const isBonneReponse = index === 0; // ✅ première réponse renseignée
+          return (
+            <label
+              htmlFor={inputId}
+              key={index}
+              className={`qcm-option${isBonneReponse ? " bonne-reponse" : ""}`}
+              style={{ order: orders[index] ?? index }}
+            >
+              <input
+                type="radio"
+                name="qcm"
+                id={inputId}
+                value={opt}
+                onchange="const wrapper = this.closest('.wp-block-ocade-blocks-qcm'); if (wrapper) wrapper.setAttribute('data-checked', 'true');"
+              />
+              {opt}
             </label>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
