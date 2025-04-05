@@ -26,6 +26,7 @@
   padding: 3rem;
   background: var(--wp--preset--color--gris-clair);
   border-radius: 5rem 1rem 5rem 5rem;
+  border-bottom: 2px solid var(--wp--preset--color--violet);
   box-shadow: 0 4px 25px rgba(0, 0, 0, 0.05);
   transition: all 0.1s ease;
 }
