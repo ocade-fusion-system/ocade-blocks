@@ -79,23 +79,18 @@ function render_qcm($attributes) {
 <?php
   $html = ob_get_clean();
 
-  // JSON-LD (SEO)
-  $faq_json = [
+  // JSON-LD (SEO) – type Question seul
+  $question_json = [
     "@context" => "https://schema.org",
-    "@type" => "FAQPage",
-    "mainEntity" => [
-      [
-        "@type" => "Question",
-        "name" => $question,
-        "acceptedAnswer" => [
-          "@type" => "Answer",
-          "text" => "La bonne réponse est : " . $options[0]
-        ]
-      ]
+    "@type" => "Question",
+    "name" => $question,
+    "acceptedAnswer" => [
+      "@type" => "Answer",
+      "text" => "La bonne réponse est : " . $options[0]
     ]
   ];
 
-  $html .= '<script type="application/ld+json">' . wp_json_encode($faq_json, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>';
+  $html .= '<script type="application/ld+json">' . wp_json_encode($question_json, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>';
 
   return $html;
 }
