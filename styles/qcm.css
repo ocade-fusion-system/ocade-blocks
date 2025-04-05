@@ -18,10 +18,12 @@
 
 
 .wp-block-ocade-blocks-qcm {
+	--success: #009860;
+	
   overflow: hidden;
   position: relative;
 	max-width: max-content;
-  padding: 3rem 2rem 2rem 2rem;
+  padding: 3rem;
   background: var(--wp--preset--color--gris-clair);
   border-radius: 5rem 1rem 5rem 5rem;
   box-shadow: 0 4px 25px rgba(0, 0, 0, 0.05);
@@ -82,8 +84,8 @@
   border-radius: 50%;
 }
 
-.wp-block-ocade-blocks-qcm[data-checked="true"]::after {
-  content: "Réponse prise en compte !";
+.wp-block-ocade-blocks-qcm::after {
+  content: "Cocher la bonne réponse";
   position: absolute;
   top: 0;
   right: 0;
@@ -96,17 +98,27 @@
   animation: fadeIn 0.4s ease;
 }
 
+.wp-block-ocade-blocks-qcm[data-success="true"]::after {
+  content: "Félicitations !";
+  background: var(--success);
+}
+
+.wp-block-ocade-blocks-qcm[data-success="true"]::after {
+  content: "Dommage !";
+  background: var(--wp--preset--color--nuit);
+}
+
 .wp-block-ocade-blocks-qcm[data-checked="true"] .qcm-option { 
 	pointer-events: none;
 }
 
 .wp-block-ocade-blocks-qcm[data-checked="true"] .qcm-option {
-  background-color: rgb(33,33,33);
+  background-color: var(--wp--preset--color--nuit);
 	color: white;
 }
 
 .wp-block-ocade-blocks-qcm[data-checked="true"] .bonne-reponse {
-  background-color: #009860 ;
+  background-color: var(--success) ;
 }
 
 .wp-block-ocade-blocks-qcm[data-checked="true"] input[type="radio"] { 

@@ -6,7 +6,7 @@ export default function save({ attributes }) {
   if (!question || !options.length) return null;
 
   return (
-    <div {...useBlockProps.save()} data-checked="false">
+    <div {...useBlockProps.save()} data-checked="false" data-success="false">
       <p>
         <strong>{question}</strong>
       </p>
@@ -15,6 +15,7 @@ export default function save({ attributes }) {
         {options.map((opt, index) => {
           const inputId = `opt-${index}`;
           const isBonneReponse = index === 0; // ✅ première réponse renseignée
+
           return (
             <label
               htmlFor={inputId}
@@ -27,7 +28,15 @@ export default function save({ attributes }) {
                 name="qcm"
                 id={inputId}
                 value={opt}
-                onchange="const wrapper = this.closest('.wp-block-ocade-blocks-qcm'); if (wrapper) wrapper.setAttribute('data-checked', 'true');"
+                data-correct={isBonneReponse} // ➕ on ajoute un indicateur
+                onchange={`
+                  const wrapper = this.closest('.wp-block-ocade-blocks-qcm');
+                  if (wrapper) {
+                    wrapper.setAttribute('data-checked', 'true');
+                    const success = this.dataset.correct === 'true';
+                    wrapper.setAttribute('data-success', success ? 'true' : 'false');
+                  }
+                `}
               />
               {opt}
             </label>

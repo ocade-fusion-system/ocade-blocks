@@ -281,13 +281,15 @@ function save({
   if (!question || !options.length) return null;
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save(),
-    "data-checked": "false"
+    "data-checked": "false",
+    "data-success": "false"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, question)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "qcm-options"
   }, options.map((opt, index) => {
     var _orders$index;
     const inputId = `opt-${index}`;
     const isBonneReponse = index === 0; // ✅ première réponse renseignée
+
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
       htmlFor: inputId,
       key: index,
@@ -300,7 +302,16 @@ function save({
       name: "qcm",
       id: inputId,
       value: opt,
-      onchange: "const wrapper = this.closest('.wp-block-ocade-blocks-qcm'); if (wrapper) wrapper.setAttribute('data-checked', 'true');"
+      "data-correct": isBonneReponse // ➕ on ajoute un indicateur
+      ,
+      onchange: `
+                  const wrapper = this.closest('.wp-block-ocade-blocks-qcm');
+                  if (wrapper) {
+                    wrapper.setAttribute('data-checked', 'true');
+                    const success = this.dataset.correct === 'true';
+                    wrapper.setAttribute('data-success', success ? 'true' : 'false');
+                  }
+                `
     }), opt);
   })));
 }
