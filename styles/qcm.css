@@ -37,7 +37,7 @@
   box-shadow: 0 4px 25px rgba(0, 0, 0, .05)
 }
 
-@media (max-width: 1280px) {
+@media (min-width: 1280px) {
   .wp-block-ocade-blocks-qcm {
     padding: 3rem;
   }
