@@ -1,3 +1,5 @@
+<?php
+
 function render_qcm($attributes) {
   $question = $attributes['question'] ?? '';
   $options = $attributes['options'] ?? [];
@@ -13,7 +15,7 @@ function render_qcm($attributes) {
     'data-qcm-id' => $qcm_id,
   ]);
 
-  // Construction du tableau avec détection de la bonne réponse
+  // Préparation des options
   $optionsSorted = [];
   foreach ($options as $index => $opt) {
     $optionsSorted[] = [
@@ -23,7 +25,18 @@ function render_qcm($attributes) {
     ];
   }
 
+  // Mélange des options
   shuffle($optionsSorted);
+
+  // Création d’un tableau d’ordres aléatoires uniques
+  $orderValues = range(0, count($optionsSorted) - 1);
+  shuffle($orderValues);
+
+  // Assignation de l'ordre aléatoire à chaque option
+  foreach ($optionsSorted as $i => &$item) {
+    $item['order'] = $orderValues[$i];
+  }
+  unset($item); // par précaution
 
   ob_start(); ?>
 
@@ -40,8 +53,8 @@ function render_qcm($attributes) {
         <label
           for="<?php echo esc_attr($inputId); ?>"
           class="<?php echo esc_attr($class); ?>"
-          style="order: <?php echo esc_attr($index); ?>;"
-          tabindex="<?php echo $index + 1; ?>"
+          style="order: <?php echo esc_attr($item['order']); ?>;"
+          tabindex="<?php echo $index + 1; ?>;"
           role="button"
           aria-describedby="qcm-instructions">
           <input
@@ -66,7 +79,7 @@ function render_qcm($attributes) {
 <?php
   $html = ob_get_clean();
 
-  // JSON-LD (pour SEO)
+  // JSON-LD (SEO)
   $faq_json = [
     "@context" => "https://schema.org",
     "@type" => "FAQPage",
@@ -86,3 +99,20 @@ function render_qcm($attributes) {
 
   return $html;
 }
+
+
+function ocade_enqueue_qcm_index_js() {
+  if (is_admin()) return;
+
+  // Vérifie que le bloc est utilisé sur la page
+  if (has_block('ocade-blocks/qcm')) {
+    wp_enqueue_script(
+      'ocade-qcm-index-js',
+      plugins_url('index.js', __FILE__),
+      [],
+      '1.0',
+      true
+    );
+  }
+}
+add_action('wp_enqueue_scripts', 'ocade_enqueue_qcm_index_js');
