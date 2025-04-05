@@ -1,30 +1,29 @@
-<?php
-
 function render_qcm($attributes) {
   $question = $attributes['question'] ?? '';
   $options = $attributes['options'] ?? [];
-  $orders  = $attributes['orders'] ?? [];
 
   if (empty($question) || empty($options)) return '';
+
+  $qcm_id = 'qcm_' . uniqid(); // ID unique pour chaque QCM
 
   $wrapper_attributes = get_block_wrapper_attributes([
     'class' => 'wp-block-ocade-blocks-qcm',
     'data-checked' => 'false',
     'tabindex' => '0',
+    'data-qcm-id' => $qcm_id,
   ]);
 
-  // Tri avec ordre et détection de la bonne réponse à index 0
+  // Construction du tableau avec détection de la bonne réponse
   $optionsSorted = [];
   foreach ($options as $index => $opt) {
     $optionsSorted[] = [
       'opt' => $opt,
-      'order' => $orders[$index] ?? $index,
       'index' => $index,
       'isBonneReponse' => $index === 0,
     ];
   }
 
-  usort($optionsSorted, fn($a, $b) => $a['order'] <=> $b['order']);
+  shuffle($optionsSorted);
 
   ob_start(); ?>
 
@@ -32,7 +31,7 @@ function render_qcm($attributes) {
     <p><strong><?php echo esc_html($question); ?></strong></p>
     <div class="qcm-options">
       <?php foreach ($optionsSorted as $index => $item) :
-        $inputId = 'opt-' . $item['index'];
+        $inputId = $qcm_id . '-opt-' . $item['index'];
         $class = 'qcm-option';
         if ($item['isBonneReponse']) {
           $class .= ' bonne-reponse';
@@ -41,13 +40,13 @@ function render_qcm($attributes) {
         <label
           for="<?php echo esc_attr($inputId); ?>"
           class="<?php echo esc_attr($class); ?>"
-          style="order: <?php echo esc_attr($item['order']); ?>;"
+          style="order: <?php echo esc_attr($index); ?>;"
           tabindex="<?php echo $index + 1; ?>"
           role="button"
           aria-describedby="qcm-instructions">
           <input
             type="radio"
-            name="qcm"
+            name="<?php echo esc_attr($qcm_id); ?>"
             id="<?php echo esc_attr($inputId); ?>"
             value="<?php echo esc_attr($item['opt']); ?>"
             data-correct="<?php echo $item['isBonneReponse'] ? 'true' : 'false'; ?>"
@@ -67,7 +66,7 @@ function render_qcm($attributes) {
 <?php
   $html = ob_get_clean();
 
-  // Construction du balisage JSON-LD FAQ (Google rich result)
+  // JSON-LD (pour SEO)
   $faq_json = [
     "@context" => "https://schema.org",
     "@type" => "FAQPage",
@@ -87,19 +86,3 @@ function render_qcm($attributes) {
 
   return $html;
 }
-
-function ocade_enqueue_qcm_index_js() {
-  if (is_admin()) return;
-
-  // Vérifie que le bloc est utilisé sur la page
-  if (has_block('ocade-blocks/qcm')) {
-    wp_enqueue_script(
-      'ocade-qcm-index-js',
-      plugins_url('index.js', __FILE__),
-      [],
-      '1.0',
-      true
-    );
-  }
-}
-add_action('wp_enqueue_scripts', 'ocade_enqueue_qcm_index_js');
