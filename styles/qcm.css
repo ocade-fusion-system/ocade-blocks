@@ -1,26 +1,30 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(-5px);
+    transform: translateY(-5px)
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0)
   }
 }
 
 .editor-styles-wrapper .wp-block-ocade-blocks-qcm {
-  background-color: var(--wp--preset--color--gris);
+  min-width: 600px;
+  max-width: 100%;
   padding: 1rem;
-  border-radius: 4px;
+  background-color: var(--wp--preset--color--gris);
+  border-radius: 4px
 }
 
+.editor-styles-wrapper .wp-block-ocade-blocks-qcm::after {
+  display: none;
+}
 
 .wp-block-ocade-blocks-qcm {
   --success: #009860;
   --error: #cf2e2e;
-
   overflow: hidden;
   position: relative;
   max-width: max-content;
@@ -29,7 +33,7 @@
   background: var(--wp--preset--color--gris-clair);
   border-radius: 5rem 1rem 5rem 5rem;
   border-bottom: 2px solid var(--wp--preset--color--violet);
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 25px rgba(0, 0, 0, .05)
 }
 
 .wp-block-ocade-blocks-qcm::after {
