@@ -13,4 +13,3 @@
 * Fichier `functions.php`
 * Fichier `ocade-blocks.php`
 * Fichier `.github/workflows/release.yml` changer `ocade-minimal` par le nom du dépot.
-  
