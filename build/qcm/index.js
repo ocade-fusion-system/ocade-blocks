@@ -264,56 +264,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ save)
 /* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
-/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__);
-
-
-function save({
-  attributes
-}) {
-  const {
-    question = "",
-    options = [],
-    orders = []
-  } = attributes;
-  if (!question || !options.length) return null;
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save(),
-    "data-checked": "false",
-    "data-success": "false"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, question)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "qcm-options"
-  }, options.map((opt, index) => {
-    var _orders$index;
-    const inputId = `opt-${index}`;
-    const isBonneReponse = index === 0; // ✅ première réponse renseignée
-
-    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
-      htmlFor: inputId,
-      key: index,
-      className: `qcm-option${isBonneReponse ? " bonne-reponse" : ""}`,
-      style: {
-        order: (_orders$index = orders[index]) !== null && _orders$index !== void 0 ? _orders$index : index
-      }
-    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-      type: "radio",
-      name: "qcm",
-      id: inputId,
-      value: opt,
-      "data-correct": isBonneReponse // ➕ on ajoute un indicateur
-      ,
-      onchange: `
-                  const wrapper = this.closest('.wp-block-ocade-blocks-qcm');
-                  if (wrapper) {
-                    wrapper.setAttribute('data-checked', 'true');
-                    const success = this.dataset.correct === 'true';
-                    wrapper.setAttribute('data-success', success ? 'true' : 'false');
-                  }
-                `
-    }), opt);
-  })));
+function save() {
+  return null;
 }
 
 /***/ }),

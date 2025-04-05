@@ -18,20 +18,45 @@
 
 
 .wp-block-ocade-blocks-qcm {
-	--success: #009860;
-	
+  --success: #009860;
+  --error: #cf2e2e;
+
   overflow: hidden;
   position: relative;
-	max-width: max-content;
+  max-width: max-content;
+  min-width: 300px;
   padding: 3rem;
   background: var(--wp--preset--color--gris-clair);
   border-radius: 5rem 1rem 5rem 5rem;
   border-bottom: 2px solid var(--wp--preset--color--violet);
   box-shadow: 0 4px 25px rgba(0, 0, 0, 0.05);
-  transition: all 0.1s ease;
 }
 
-.wp-block-ocade-blocks-qcm > p strong {
+.wp-block-ocade-blocks-qcm::after {
+  content: "Cocher la bonne réponse";
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.5rem 1rem;
+  color: white;
+  background: var(--wp--preset--color--violet);
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-bottom-left-radius: 1rem;
+  animation: fadeIn 0.5 ease;
+}
+
+.wp-block-ocade-blocks-qcm[data-success="true"]::after {
+  content: "Félicitations !" !important;
+  background: var(--success);
+}
+
+.wp-block-ocade-blocks-qcm[data-success="false"]::after {
+  content: "Dommage !" !important;
+  background: var(--error);
+}
+
+.wp-block-ocade-blocks-qcm>p strong {
   font-size: 1.35rem;
 }
 
@@ -53,12 +78,17 @@
   border: 2px solid transparent;
   border-radius: 0.75rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   cursor: pointer;
 }
 
 .qcm-option:hover {
   background: var(--wp--preset--color--violet--clair);
   border-color: var(--wp--preset--color--violet);
+}
+
+.qcm-option[data-checked="true"] input {
+  background-color: white;
 }
 
 .qcm-option input[type="radio"] {
@@ -69,7 +99,6 @@
   border-radius: 50%;
   position: relative;
   display: inline-block;
-  transition: border-color 0.1s ease;
   margin: 0;
 }
 
@@ -85,47 +114,25 @@
   border-radius: 50%;
 }
 
-.wp-block-ocade-blocks-qcm::after {
-  content: "Cocher la bonne réponse";
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 0.5rem 1rem;
-  color: white;
-  background: var(--wp--preset--color--violet);
-  font-size: 0.875rem;
-  font-weight: 600;
-  border-bottom-left-radius: 1rem;
-  animation: fadeIn 0.4s ease;
-}
-
-.wp-block-ocade-blocks-qcm[data-success="true"]::after {
-  content: "Félicitations !";
-  background: var(--success);
-}
-
-.wp-block-ocade-blocks-qcm[data-success="true"]::after {
-  content: "Dommage !";
-  background: var(--wp--preset--color--nuit);
-}
-
-.wp-block-ocade-blocks-qcm[data-checked="true"] .qcm-option { 
-	pointer-events: none;
+.wp-block-ocade-blocks-qcm[data-checked="true"] .qcm-option {
+  pointer-events: none;
 }
 
 .wp-block-ocade-blocks-qcm[data-checked="true"] .qcm-option {
   background-color: var(--wp--preset--color--nuit);
-	color: white;
+  color: white;
 }
 
 .wp-block-ocade-blocks-qcm[data-checked="true"] .bonne-reponse {
-  background-color: var(--success) ;
+  background-color: var(--success);
 }
 
-.wp-block-ocade-blocks-qcm[data-checked="true"] input[type="radio"] { 
-	outline: none;
+.wp-block-ocade-blocks-qcm[data-checked="true"] input[type="radio"] {
+  outline: none;
 }
 
 .wp-block-ocade-blocks-qcm[data-checked="true"] .qcm-option:hover input::after {
-	background-color: transparent;
+  background-color: transparent;
+  transition: background-color 0.4s ease;
+  cursor: default;
 }
