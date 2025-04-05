@@ -79,7 +79,7 @@ function render_qcm($attributes) {
 <?php
   $html = ob_get_clean();
 
-  // JSON-LD (SEO) – type Question seul
+  // JSON-LD – type Question seul (compatible avec la FAQ de Yoast)
   $question_json = [
     "@context" => "https://schema.org",
     "@type" => "Question",
@@ -89,10 +89,10 @@ function render_qcm($attributes) {
       "text" => "La bonne réponse est : " . $options[0]
     ]
   ];
-
+  
   $html .= '<script type="application/ld+json">' . wp_json_encode($question_json, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>';
-
-  return $html;
+  
+  return $html;  
 }
 
 
