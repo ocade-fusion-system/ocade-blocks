@@ -37,23 +37,21 @@ function render_qcm($attributes) {
         if ($item['isBonneReponse']) {
           $class .= ' bonne-reponse';
         }
-        ?>
+      ?>
         <label
           for="<?php echo esc_attr($inputId); ?>"
           class="<?php echo esc_attr($class); ?>"
-          style="order: <?php echo esc_attr($item['order']); ?>"
+          style="order: <?php echo esc_attr($item['order']); ?>;"
           tabindex="<?php echo $index + 1; ?>"
           role="button"
-          aria-describedby="qcm-instructions"
-        >
+          aria-describedby="qcm-instructions">
           <input
             type="radio"
             name="qcm"
             id="<?php echo esc_attr($inputId); ?>"
             value="<?php echo esc_attr($item['opt']); ?>"
             data-correct="<?php echo $item['isBonneReponse'] ? 'true' : 'false'; ?>"
-            tabindex="0"
-          />
+            tabindex="0" />
           <?php echo esc_html($item['opt']); ?>
         </label>
       <?php endforeach; ?>
@@ -62,26 +60,46 @@ function render_qcm($attributes) {
         class="qcm-aria-feedback sr-only"
         style="order: <?php echo count($options); ?>;"
         aria-live="polite"
-        aria-atomic="true"
-      ></div>
+        aria-atomic="true"></div>
     </div>
   </div>
 
-  <?php return ob_get_clean();
+<?php
+  $html = ob_get_clean();
+
+  // Construction du balisage JSON-LD FAQ (Google rich result)
+  $faq_json = [
+    "@context" => "https://schema.org",
+    "@type" => "FAQPage",
+    "mainEntity" => [
+      [
+        "@type" => "Question",
+        "name" => $question,
+        "acceptedAnswer" => [
+          "@type" => "Answer",
+          "text" => "La bonne réponse est : " . $options[0]
+        ]
+      ]
+    ]
+  ];
+
+  $html .= '<script type="application/ld+json">' . wp_json_encode($faq_json, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>';
+
+  return $html;
 }
 
 function ocade_enqueue_qcm_index_js() {
-    if (is_admin()) return;
+  if (is_admin()) return;
 
-    // Vérifie que le bloc est utilisé sur la page (optionnel mais bon pour la perf)
-    if (has_block('ocade-blocks/qcm')) {
-        wp_enqueue_script(
-            'ocade-qcm-index-js',
-            plugins_url('index.js', __FILE__),
-            [],
-            '1.0',
-            true
-        );
-    }
+  // Vérifie que le bloc est utilisé sur la page
+  if (has_block('ocade-blocks/qcm')) {
+    wp_enqueue_script(
+      'ocade-qcm-index-js',
+      plugins_url('index.js', __FILE__),
+      [],
+      '1.0',
+      true
+    );
+  }
 }
 add_action('wp_enqueue_scripts', 'ocade_enqueue_qcm_index_js');
