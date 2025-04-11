@@ -53,7 +53,6 @@ function render_qcm($attributes) {
           class="<?php echo esc_attr($class); ?>"
           style="order: <?php echo esc_attr($item['order']); ?>;"
           tabindex="0"
-          role="button"
           aria-describedby="qcm-instructions">
           <input
             type="radio"
