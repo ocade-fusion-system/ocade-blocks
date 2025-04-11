@@ -14,9 +14,38 @@ export default function save({ attributes }) {
 
   const blockProps = useBlockProps.save();
 
+  // Détermine l'image principale
   const imageURL = customThumbnail
     ? customThumbnail
     : `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+
+  // Génère dynamiquement le srcSet pour une image personnalisée
+  const getSrcSet = (url) => {
+    if (!url.includes("youtube.com")) {
+      try {
+        const urlObj = new URL(url);
+        const ext = urlObj.pathname.split(".").pop(); // ex: webp
+        const baseName = url.replace(`.${ext}`, "");
+        return `
+          ${baseName}-1024x576.${ext} 1024w,
+          ${baseName}-768x432.${ext} 768w,
+          ${baseName}-450x253.${ext} 450w
+        `;
+      } catch (e) {
+        return ""; // fallback
+      }
+    }
+
+    // fallback pour les miniatures YouTube
+    return `
+      https://img.youtube.com/vi/${videoId}/sddefault.jpg 640w,
+      https://img.youtube.com/vi/${videoId}/hqdefault.jpg 480w,
+      https://img.youtube.com/vi/${videoId}/mqdefault.jpg 320w,
+      https://img.youtube.com/vi/${videoId}/default.jpg 120w
+    `;
+  };
+
+  const srcSet = getSrcSet(imageURL);
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -43,13 +72,8 @@ export default function save({ attributes }) {
       >
         <img
           src={imageURL}
-          srcSet={`
-    https://img.youtube.com/vi/${videoId}/sddefault.jpg 640w,
-    https://img.youtube.com/vi/${videoId}/hqdefault.jpg 480w,
-    https://img.youtube.com/vi/${videoId}/mqdefault.jpg 320w,
-    https://img.youtube.com/vi/${videoId}/default.jpg 120w
-  `}
-          sizes="(max-width: 600px) 100vw, 600px"
+          srcSet={srcSet}
+          sizes="(max-width: 1024px) 100vw, 1024px"
           alt={videoAlt || "Aperçu de la vidéo YouTube"}
           loading={lazyLoading ? "lazy" : "eager"}
           width="640"
