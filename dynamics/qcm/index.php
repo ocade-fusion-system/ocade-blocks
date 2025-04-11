@@ -46,15 +46,13 @@ function render_qcm($attributes) {
       <?php foreach ($optionsSorted as $index => $item) :
         $inputId = $qcm_id . '-opt-' . $item['index'];
         $class = 'qcm-option';
-        if ($item['isBonneReponse']) {
-          $class .= ' bonne-reponse';
-        }
+        if ($item['isBonneReponse']) $class .= ' bonne-reponse';
       ?>
         <label
           for="<?php echo esc_attr($inputId); ?>"
           class="<?php echo esc_attr($class); ?>"
           style="order: <?php echo esc_attr($item['order']); ?>;"
-          tabindex="<?php echo $index + 1; ?>;"
+          tabindex="0"
           role="button"
           aria-describedby="qcm-instructions">
           <input
