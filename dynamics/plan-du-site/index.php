@@ -14,7 +14,12 @@ function render_plan_du_site($attributes) {
         <?php
         $pages = get_pages(['sort_column' => 'menu_order']);
         foreach ($pages as $page) :
-          if (!in_array($page->post_title, ['Plan du site'])) : // évite la boucle sur elle-même
+          $is_noindex = get_post_meta($page->ID, '_yoast_wpseo_meta-robots-noindex', true);
+
+          if (
+            $is_noindex !== '1' && // exclut les pages noindex
+            !in_array($page->post_title, ['Plan du site']) // évite la boucle sur elle-même
+          ) :
             echo '<li><a href="' . get_permalink($page->ID) . '">' . esc_html($page->post_title) . '</a></li>';
           endif;
         endforeach;
@@ -62,7 +67,6 @@ function render_plan_du_site($attributes) {
         ?>
       </ul>
     </section>
-
 
   </main>
 
