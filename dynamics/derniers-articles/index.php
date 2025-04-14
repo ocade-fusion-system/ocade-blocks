@@ -54,12 +54,13 @@ function render_derniers_articles($attributes) {
           <a class="figure-link" href="<?= esc_url(get_the_permalink()); ?>" aria-label="Lire l’article : <?= esc_attr(get_the_title()); ?>" rel="nofollow">
             <figure>
               <?php if ($image_src) : ?>
+                <?php
+                // Par défaut (mobile-friendly)
+                $img_class = ($index < 2) ? 'image-priority' : 'image-lazy';
+                $loading = ($index < 2) ? 'eager' : 'lazy';
+                $priority = ($index < 2) ? 'high' : 'low';
+                ?>
                 <img
-                  <?php
-                    $img_class = ($index < 2) ? 'image-priority' : 'image-lazy';
-                    $loading = ($index < 2) ? 'eager' : 'lazy';
-                    $priority = ($index < 2) ? 'high' : 'low';
-                  ?>
                   class="<?= $img_class; ?>"
                   src="<?= esc_url($image_src[0]); ?>"
                   width="<?= esc_attr($image_src[1]); ?>"
