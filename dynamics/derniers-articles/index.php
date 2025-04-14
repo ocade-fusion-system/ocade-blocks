@@ -64,7 +64,7 @@ function render_derniers_articles($attributes) {
                   alt="<?= $image_alt; ?>"
                   loading="<?= $loading; ?>"
                   fetchpriority="<?= $priority; ?>"
-                  decoding="sync">
+                  decoding="async">
               <?php endif; ?>
             </figure>
           </a>
