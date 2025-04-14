@@ -32,7 +32,6 @@ function register_all_styles_folder() {
 add_action('enqueue_block_editor_assets', 'register_all_styles_folder');
 add_action('wp_enqueue_scripts', 'register_all_styles_folder');
 
-
 // Chargement différé des fichiers CSS pour l'éditeur et le front-end
 function ocade_blocks_defer_all_ocade_blocks_styles($tag, $handle) {
   if (str_starts_with($handle, 'ocade-blocks-')) {
@@ -45,3 +44,24 @@ function ocade_blocks_defer_all_ocade_blocks_styles($tag, $handle) {
   return $tag;
 }
 add_filter('style_loader_tag', 'ocade_blocks_defer_all_ocade_blocks_styles', 10, 2);
+
+// Chargement différé des fichiers JS pour l'éditeur et le front-end
+function ocade_blocks_enqueue_defer_script() {
+  $script_url = plugin_dir_url(__FILE__) . 'assets/js/defer.js';
+  wp_enqueue_script(
+    'ocade-blocks-defer',
+    $script_url,
+    [],
+    null,
+    true
+  );
+}
+add_action('wp_enqueue_scripts', 'ocade_blocks_enqueue_defer_script');
+
+// Ajoute l'attribut "defer" aux scripts JS chargés par le plugin
+function ocade_blocks_add_defer_attribute($tag, $handle, $src) {
+  if ($handle === 'ocade-blocks-defer') return '<script src="' . esc_url($src) . '" defer></script>';
+  return $tag;
+}
+add_filter('script_loader_tag', 'ocade_blocks_add_defer_attribute', 10, 3);
+

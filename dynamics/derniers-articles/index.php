@@ -48,9 +48,6 @@ function render_derniers_articles($attributes) {
       $image_id = get_post_thumbnail_id();
       $image_src = wp_get_attachment_image_src($image_id, 'medium');
       $image_alt = esc_attr(get_post_meta($image_id, '_wp_attachment_image_alt', true));
-
-      $loading = ($index === 0) ? 'eager' : 'lazy';
-      $priority = ($index === 0) ? 'high' : 'auto';
     ?>
       <li>
         <article>
@@ -58,12 +55,13 @@ function render_derniers_articles($attributes) {
             <figure>
               <?php if ($image_src) : ?>
                 <img
+                  class="<?= $index === 0 ? 'image-priority' : 'image-lazy'; ?>"
                   src="<?= esc_url($image_src[0]); ?>"
                   width="<?= esc_attr($image_src[1]); ?>"
                   height="<?= esc_attr($image_src[2]); ?>"
                   alt="<?= $image_alt; ?>"
-                  loading="<?= $loading; ?>"
-                  fetchpriority="<?= $priority; ?>"
+                  loading="lazy"
+                  fetchpriority="low"
                   decoding="async">
               <?php endif; ?>
             </figure>
