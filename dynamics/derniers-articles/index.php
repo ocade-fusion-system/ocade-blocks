@@ -55,13 +55,18 @@ function render_derniers_articles($attributes) {
             <figure>
               <?php if ($image_src) : ?>
                 <img
-                  class="<?= $index === 0 ? 'image-priority' : 'image-lazy'; ?>"
+                  <?php
+                    $img_class = ($index < 2) ? 'image-priority' : 'image-lazy';
+                    $loading = ($index < 2) ? 'eager' : 'lazy';
+                    $priority = ($index < 2) ? 'high' : 'low';
+                  ?>
+                  class="<?= $img_class; ?>"
                   src="<?= esc_url($image_src[0]); ?>"
                   width="<?= esc_attr($image_src[1]); ?>"
                   height="<?= esc_attr($image_src[2]); ?>"
                   alt="<?= $image_alt; ?>"
-                  loading="lazy"
-                  fetchpriority="low"
+                  loading="<?= $loading; ?>"
+                  fetchpriority="<?= $priority; ?>"
                   decoding="async">
               <?php endif; ?>
             </figure>
