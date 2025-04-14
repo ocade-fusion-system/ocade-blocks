@@ -108,3 +108,9 @@ function ocade_enqueue_qcm_index_js() {
   }
 }
 add_action('wp_enqueue_scripts', 'ocade_enqueue_qcm_index_js');
+
+function ocade_qcm_add_defer_attribute($tag, $handle) {
+  if ($handle === 'ocade-qcm-index-js') return str_replace('<script ', '<script defer ', $tag);
+  return $tag;
+}
+add_filter('script_loader_tag', 'ocade_qcm_add_defer_attribute', 10, 2);
