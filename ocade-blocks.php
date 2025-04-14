@@ -31,3 +31,17 @@ function register_all_styles_folder() {
 }
 add_action('enqueue_block_editor_assets', 'register_all_styles_folder');
 add_action('wp_enqueue_scripts', 'register_all_styles_folder');
+
+
+// Chargement différé des fichiers CSS pour l'éditeur et le front-end
+function ocade_blocks_defer_all_ocade_blocks_styles($tag, $handle) {
+  if (str_starts_with($handle, 'ocade-blocks-')) {
+    return str_replace(
+      "rel='stylesheet'",
+      "rel='stylesheet' media='print' onload=\"this.media='all'\"",
+      $tag
+    );
+  }
+  return $tag;
+}
+add_filter('style_loader_tag', 'ocade_blocks_defer_all_ocade_blocks_styles', 10, 2);
