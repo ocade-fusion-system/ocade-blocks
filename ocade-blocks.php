@@ -53,15 +53,21 @@ add_filter('style_loader_tag', 'ocade_blocks_defer_all_ocade_blocks_styles', 10,
 
 // Chargement différé des fichiers JS pour l'éditeur et le front-end
 function ocade_blocks_enqueue_defer_script() {
-  $script_url = plugin_dir_url(__FILE__) . 'assets/js/defer.js';
+  $script_path = plugin_dir_path(__FILE__) . 'assets/js/defer.js';
+  $script_url  = plugin_dir_url(__FILE__) . 'assets/js/defer.js';
+
+  // 🔁 Génère une version basée sur la date de modification
+  $version = file_exists($script_path) ? filemtime($script_path) : null;
+
   wp_enqueue_script(
     'ocade-blocks-defer',
     $script_url,
     [],
-    null,
+    $version,
     true
   );
 }
+
 add_action('wp_enqueue_scripts', 'ocade_blocks_enqueue_defer_script');
 
 // Ajoute l'attribut "defer" aux scripts JS chargés par le plugin

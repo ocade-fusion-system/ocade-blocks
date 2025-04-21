@@ -37,11 +37,11 @@
   background-size: 1.75rem;
   border-radius: 10px;
   transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
 @media (min-width: 600px) {
   .wp-block-ocade-blocks-youtube-lite:not(.is-playing)::before {
-    pointer-events: none;
     width: 5.5rem;
     height: 3.5rem;
     background-size: 2.5rem;
