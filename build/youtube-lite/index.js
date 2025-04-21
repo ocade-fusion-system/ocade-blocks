@@ -372,16 +372,12 @@ function save({
     urlPageSite
   } = attributes;
   const blockProps = _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save();
-
-  // Détermine l'image principale
   const imageURL = customThumbnail ? customThumbnail : `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-
-  // Génère dynamiquement le srcSet pour une image personnalisée
   const getSrcSet = url => {
     if (!url.includes("youtube.com")) {
       try {
         const urlObj = new URL(url);
-        const ext = urlObj.pathname.split(".").pop(); // ex: webp
+        const ext = urlObj.pathname.split(".").pop();
         const baseName = url.replace(`.${ext}`, "");
         return `
           ${baseName}-1024x576.${ext} 1024w,
@@ -389,11 +385,9 @@ function save({
           ${baseName}-450x253.${ext} 450w
         `;
       } catch (e) {
-        return ""; // fallback
+        return "";
       }
     }
-
-    // fallback pour les miniatures YouTube
     return `
       https://img.youtube.com/vi/${videoId}/sddefault.jpg 640w,
       https://img.youtube.com/vi/${videoId}/hqdefault.jpg 480w,
@@ -434,6 +428,12 @@ function save({
       objectFit: "cover",
       aspectRatio: "16 / 9"
     }
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("noscript", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("iframe", {
+    src: `https://www.youtube-nocookie.com/embed/${videoId}`,
+    width: "640",
+    height: "360",
+    frameBorder: "0",
+    allowFullScreen: true
   })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("script", {
     type: "application/ld+json"
   }, JSON.stringify(structuredData)));
