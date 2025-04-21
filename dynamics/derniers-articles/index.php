@@ -62,9 +62,9 @@ function render_derniers_articles($attributes) {
               <?php if ($image_src) : ?>
                 <?php
                 // Par défaut (mobile-friendly)
-                $img_class = ($index < 2) ? 'image-priority' : 'image-lazy';
-                $loading = ($index < 2) ? 'eager' : 'lazy';
-                $priority = ($index < 2) ? 'high' : 'low';
+                $img_class = ($index < 3) ? 'image-priority' : 'image-lazy';
+                $loading = ($index < 3) ? 'eager' : 'lazy';
+                $priority = ($index < 3) ? 'high' : 'low';
                 ?>
                 <img
                   class="<?= $img_class; ?>"
