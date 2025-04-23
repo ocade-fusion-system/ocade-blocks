@@ -23,7 +23,7 @@
 
 
 #glossaire-wrapper {
-	margin: 0 auto;
+	margin: 0 auto; 
 	padding: 0;
 	box-shadow: 0 2px 6px var(--wp--preset--color--violet-clair);
 }
