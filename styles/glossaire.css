@@ -1,3 +1,4 @@
+
 .editor-styles-wrapper .wp-block-ocade-blocks-glossaire > div {
   position: relative;
   margin-bottom: 2rem;
@@ -6,24 +7,43 @@
   border-radius: 8px;
 }
 
-#glossaire-wrapper section:target {
-  background-color: var(--wp--preset--color--violet-clair);
-  border-left: 4px solid var(--wp--preset--color--violet);
-  padding: 1rem;
-  scroll-margin-top: 100px;
+
+@keyframes highlightSection {
+  0%, 100% {
+    background-color: var(--wp--preset--color--violet-clair);
+  }
+  50% {
+    background-color: white;
+  }
 }
+
+.page-id-1784 main {
+  padding: 0;
+}
+
+#glossaire-wrapper section:target {
+  scroll-margin-top: 200px;
+  border-left: 4px solid var(--wp--preset--color--violet);
+  animation: highlightSection 0.4s ease-in-out 0s 4;
+  background-color: var(--wp--preset--color--violet-clair);
+}
+
 
 #glossaire-wrapper section:target dl {
   border: none;
 }
 
 .wp-block-ocade-blocks-glossaire dl {
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #ccc;
+  margin: 0;
+  padding: 0.5rem;
+}
+
+#glossaire-wrapper section:nth-of-type(even) dl {
+  background-color: #f9f9f9;
 }
 
 .wp-block-ocade-blocks-glossaire dt {
+  color: var(--wp--preset--color--violet);
   font-weight: bold;
   font-size: 1.2rem;
   text-transform: capitalize;
@@ -40,22 +60,33 @@
   margin-left: 0;
 }
 
+#glossaire-wrapper {
+	padding: 0;
+	margin: 2rem 0;
+	box-shadow: 0 2px 6px var(--wp--preset--color--violet-clair);
+}
+
 #glossaire-wrapper form {
+  position: sticky;
+  top: 3.7rem;
   display: flex;
   justify-content: center;
-  align-items: center;
   flex-direction: column;
   gap: 0.5rem;
-  margin: 0 auto 2rem auto;
-  padding: 2rem;
+  margin: 0 auto;
+  padding: 1rem;
   background-color: var(--wp--preset--color--violet-clair);
-  border-radius: 8px;
-  box-shadow: 0 2px 6px var(--wp--preset--color--violet-clair);
+  box-shadow: 0 4px 6px -4px rgba(0, 0, 0, 0.1); /* ombre subtile en bas uniquement */
+}
+@media(min-width: 768px) {
+  #glossaire-wrapper form {
+    padding: 2rem;
+  }
 }
 
 #glossaire-wrapper form p {
   font-weight: 600;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: var(--wp--preset--color--nuit);
 }
 
