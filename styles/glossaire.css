@@ -21,44 +21,6 @@
   padding: 0;
 }
 
-#glossaire-wrapper section:target {
-  scroll-margin-top: 200px;
-  background-color: var(--wp--preset--color--violet-clair);
-  border-left: 4px solid var(--wp--preset--color--violet);
-  animation: highlightSection 0.4s ease-in-out 0s 4;
-}
-
-
-#glossaire-wrapper section:target dl {
-  border: none;
-}
-
-.wp-block-ocade-blocks-glossaire dl {
-  margin: 0;
-  padding: 0.5rem;
-}
-
-#glossaire-wrapper section:nth-of-type(even) dl {
-  background-color: #f9f9f9;
-}
-
-.wp-block-ocade-blocks-glossaire dt {
-  color: var(--wp--preset--color--violet);
-  font-weight: bold;
-  font-size: 1.2rem;
-  text-transform: capitalize;
-}
-
-.wp-block-ocade-blocks-glossaire dt::before {
-  content: "ⵌ";
-  display: inline-block;
-	margin-right: .25rem;
-  text-transform: none;
-}
-
-.wp-block-ocade-blocks-glossaire dd {
-  margin-left: 0;
-}
 
 #glossaire-wrapper {
 	margin: 0 auto;
@@ -110,4 +72,43 @@
   border-color: var(--wp--preset--color--violet-clair);
   outline-color: var(--wp--preset--color--violet-clair);
   box-shadow: 0 0 0 3px var(--wp--preset--color--violet);
+}
+
+#glossaire-wrapper section:target {
+  scroll-margin-top: 200px;
+  background-color: var(--wp--preset--color--violet-clair);
+  border-left: 4px solid var(--wp--preset--color--violet);
+  animation: highlightSection 0.4s ease-in-out 0s 4;
+}
+
+
+#glossaire-wrapper section:target dl {
+  border: none;
+}
+
+.wp-block-ocade-blocks-glossaire dl {
+  margin: 0;
+  padding: 0.5rem;
+}
+
+#glossaire-wrapper section:nth-of-type(even) dl {
+  background-color: #f9f9f9;
+}
+
+.wp-block-ocade-blocks-glossaire dt {
+  color: var(--wp--preset--color--violet);
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-transform: capitalize;
+}
+
+.wp-block-ocade-blocks-glossaire dt::before {
+  content: "ⵌ";
+  display: inline-block;
+	margin-right: .25rem;
+  text-transform: none;
+}
+
+.wp-block-ocade-blocks-glossaire dd {
+  margin-left: 0;
 }
