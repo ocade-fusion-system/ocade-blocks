@@ -13,15 +13,7 @@ export default function Block({ attributes, setAttributes }) {
 
   return (
     <div {...useBlockProps()}>
-      <div
-        style={{
-          marginBottom: "2em",
-          border: "1px solid #ccc",
-          padding: "1em",
-          borderRadius: "8px",
-          position: "relative",
-        }}
-      >
+      <div>
         <TextControl
           label="Mot"
           value={terme.terme}
