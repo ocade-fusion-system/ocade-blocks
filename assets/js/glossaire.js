@@ -6,11 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const form = document.createElement('form');
   form.setAttribute('role', 'search');
   form.setAttribute('aria-label', 'Filtrer le glossaire');
-  form.innerHTML = `
-      <label for="glossaire-search">Rechercher un terme :</label>
-      <input id="glossaire-search" name="q" type="search" aria-describedby="glossaire-help" />
-      <p id="glossaire-help">Tapez un mot-clé pour filtrer les définitions affichées</p>
-  `;
+  form.innerHTML = `<input id="glossaire-search" name="q" type="search" title="Filtrer les termes recherchés dans le glossaire." />`;
   wrapper.prepend(form);
 
   const input = form.querySelector('input');
