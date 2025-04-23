@@ -12,6 +12,10 @@
   padding: 1rem;
 }
 
+#glossaire-wrapper section:target dl {
+  border: none;
+}
+
 .wp-block-ocade-blocks-glossaire dl {
   margin-bottom: 1rem;
   padding-bottom: 1rem;
