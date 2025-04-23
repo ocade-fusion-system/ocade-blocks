@@ -61,9 +61,14 @@
 }
 
 #glossaire-wrapper {
-	margin: 2rem 0;
+	margin: 0 auto;
 	padding: 0;
 	box-shadow: 0 2px 6px var(--wp--preset--color--violet-clair);
+}
+@media(min-width: 768px) {
+  #glossaire-wrapper {
+    margin: 2rem auto;
+  }
 }
 
 #glossaire-wrapper form {
