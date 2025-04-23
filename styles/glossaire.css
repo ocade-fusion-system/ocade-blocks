@@ -34,8 +34,6 @@
 }
 
 #glossaire-wrapper form {
-  position: sticky;
-  top: 3.7rem;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -47,6 +45,8 @@
 }
 @media(min-width: 768px) {
   #glossaire-wrapper form {
+    position: sticky;
+    top: 3.7rem;
     padding: 2rem;
   }
 }
