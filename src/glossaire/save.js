@@ -11,10 +11,10 @@ export default function save({ attributes }) {
       id={terme.terme.replaceAll(" ", "-")}
       glossaire-term={terme.terme}
     >
-      <div itemScope itemType="https://schema.org/DefinedTerm">
+      <dl itemScope itemType="https://schema.org/DefinedTerm">
         <dt itemProp="name">{terme.terme}</dt>
         <dd itemProp="description">{terme.definition}</dd>
-      </div>
+      </dl>
     </section>
   );
 }

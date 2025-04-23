@@ -227,7 +227,7 @@ function save({
     itemType: "https://schema.org/DefinedTermSet",
     id: terme.terme.replaceAll(" ", "-"),
     "glossaire-term": terme.terme
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dl", {
     itemScope: true,
     itemType: "https://schema.org/DefinedTerm"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dt", {
