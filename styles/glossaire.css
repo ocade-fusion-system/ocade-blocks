@@ -84,6 +84,7 @@
 
 #glossaire-wrapper section:target dl {
   border: none;
+  background-color: var(--wp--preset--color--violet-clair);
 }
 
 .wp-block-ocade-blocks-glossaire dl {
