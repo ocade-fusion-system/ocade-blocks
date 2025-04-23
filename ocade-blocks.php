@@ -7,7 +7,7 @@
  * Author Name: Valentin Charrier
  * Description: Plugins de blocks Gutenberg pour le site Ocade Fusion.
  * Text Domain: ocade-blocks
- * Version: 1.0.132
+ * Version: 1.0.131
  */
 
 if (is_admin()) require_once plugin_dir_path(__FILE__) . 'inc/plugin-updater.php';
@@ -76,3 +76,37 @@ function ocade_blocks_add_defer_attribute($tag, $handle, $src) {
   return $tag;
 }
 add_filter('script_loader_tag', 'ocade_blocks_add_defer_attribute', 10, 3);
+
+// Ajouter un Script permettant de filtrer le glossaire
+function ocade_enqueue_glossaire_script() {
+  if (is_page(1784)) {
+    // Définition du chemin du fichier JS dans le plugin
+    $plugin_dir = plugin_dir_path(__FILE__);
+    $plugin_url = plugin_dir_url(__FILE__);
+    $js_relative_path = 'assets/js/glossaire.js';
+    $js_full_path = $plugin_dir . $js_relative_path;
+    $js_url = $plugin_url . $js_relative_path;
+
+    // Utilisation de filemtime pour versionner automatiquement
+    $version = file_exists($js_full_path) ? filemtime($js_full_path) : null;
+
+    // Enregistrement du script
+    wp_register_script(
+      'glossaire-filter-script',
+      $js_url,
+      [],
+      $version,
+      true // chargement dans le footer
+    );
+
+    // Ajout de l'attribut async (non-bloquant)
+    add_filter('script_loader_tag', 'ocade_async_glossaire_script', 10, 2);
+
+    wp_enqueue_script('glossaire-filter-script');
+  }
+}
+add_action('wp_enqueue_scripts', 'ocade_enqueue_glossaire_script');
+function ocade_async_glossaire_script($tag, $handle) {
+  if ('glossaire-filter-script' === $handle) return str_replace(' src', ' async src', $tag);
+  return $tag;
+}
