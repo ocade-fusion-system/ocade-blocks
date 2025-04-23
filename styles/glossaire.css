@@ -6,7 +6,7 @@
   border-radius: 8px;
 }
 
-.wp-block-ocade-blocks-glossaire div {
+.wp-block-ocade-blocks-glossaire dl {
   margin-bottom: 1rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid #ccc;
