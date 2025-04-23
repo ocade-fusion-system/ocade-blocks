@@ -10,6 +10,7 @@
   background-color: var(--wp--preset--color--violet-clair);
   border-left: 4px solid var(--wp--preset--color--violet);
   padding: 1rem;
+  scroll-margin-top: 100px;
 }
 
 #glossaire-wrapper section:target dl {
