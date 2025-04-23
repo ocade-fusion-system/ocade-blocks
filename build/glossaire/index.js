@@ -50,15 +50,7 @@ function Block({
   };
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps)()
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    style: {
-      marginBottom: "2em",
-      border: "1px solid #ccc",
-      padding: "1em",
-      borderRadius: "8px",
-      position: "relative"
-    }
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextControl, {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextControl, {
     label: "Mot",
     value: terme.terme,
     onChange: value => updateTerme("terme", value)
@@ -257,27 +249,15 @@ function save({
     ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save(),
     itemScope: true,
     itemType: "https://schema.org/DefinedTermSet",
-    id: terme.terme.replaceAll(" ", "-")
+    id: terme.terme.replaceAll(" ", "-"),
+    "glossaire-term": terme.terme
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     itemScope: true,
-    itemType: "https://schema.org/DefinedTerm",
-    style: {
-      marginBottom: "1rem",
-      paddingBottom: "1rem",
-      // Ajouter un peu d'espace sous chaque terme
-      borderBottom: "1px solid #ccc" // Ligne de séparation
-    }
+    itemType: "https://schema.org/DefinedTerm"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dt", {
-    itemProp: "name",
-    style: {
-      fontWeight: "bold",
-      fontSize: "1.2em"
-    }
+    itemProp: "name"
   }, terme.terme), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dd", {
-    itemProp: "description",
-    style: {
-      marginLeft: 0
-    }
+    itemProp: "description"
   }, terme.definition)));
 }
 
