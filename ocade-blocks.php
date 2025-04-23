@@ -107,6 +107,6 @@ function ocade_enqueue_glossaire_script() {
 }
 add_action('wp_enqueue_scripts', 'ocade_enqueue_glossaire_script');
 function ocade_async_glossaire_script($tag, $handle) {
-  if ('glossaire-filter-script' === $handle) return str_replace(' src', ' async src', $tag);
+  if ('glossaire-filter-script' === $handle) return str_replace(' src', ' defer src', $tag);
   return $tag;
 }
