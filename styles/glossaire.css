@@ -19,6 +19,8 @@
 
 .wp-block-ocade-blocks-glossaire dt::before {
   content: "ⵌ";
+  display: inline-block;
+	margin-right: .25rem;
 }
 
 .wp-block-ocade-blocks-glossaire dd {
