@@ -373,29 +373,7 @@ function save({
   } = attributes;
   const blockProps = _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save();
   const imageURL = customThumbnail ? customThumbnail : `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-  const getSrcSet = url => {
-    if (!url.includes("youtube.com")) {
-      try {
-        const urlObj = new URL(url);
-        const ext = urlObj.pathname.split(".").pop();
-        const baseName = url.replace(`.${ext}`, "");
-        return `
-          ${baseName}-1024x576.${ext} 1024w,
-          ${baseName}-768x432.${ext} 768w,
-          ${baseName}-450x253.${ext} 450w
-        `;
-      } catch (e) {
-        return "";
-      }
-    }
-    return `
-      https://img.youtube.com/vi/${videoId}/sddefault.jpg 640w,
-      https://img.youtube.com/vi/${videoId}/hqdefault.jpg 480w,
-      https://img.youtube.com/vi/${videoId}/mqdefault.jpg 320w,
-      https://img.youtube.com/vi/${videoId}/default.jpg 120w
-    `;
-  };
-  const srcSet = getSrcSet(imageURL);
+  const srcSet = [`https://img.youtube.com/vi/${videoId}/sddefault.jpg 640w`, `https://img.youtube.com/vi/${videoId}/hqdefault.jpg 480w`, `https://img.youtube.com/vi/${videoId}/mqdefault.jpg 320w`, `https://img.youtube.com/vi/${videoId}/default.jpg 120w`].join(", ");
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "VideoObject",
@@ -428,13 +406,21 @@ function save({
       objectFit: "cover",
       aspectRatio: "16 / 9"
     }
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("noscript", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("iframe", {
-    src: `https://www.youtube-nocookie.com/embed/${videoId}`,
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("noscript", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("video", {
+    controls: true,
+    preload: "none",
+    poster: imageURL,
     width: "640",
     height: "360",
-    frameBorder: "0",
-    allowFullScreen: true
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("script", {
+    style: {
+      width: "100%",
+      height: "auto",
+      aspectRatio: "16 / 9"
+    }
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("source", {
+    src: "/wp-content/uploads/2025/04/video.mp4",
+    type: "video/mp4"
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("script", {
     type: "application/ld+json"
   }, JSON.stringify(structuredData)));
 }

@@ -18,31 +18,12 @@ export default function save({ attributes }) {
     ? customThumbnail
     : `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
 
-  const getSrcSet = (url) => {
-    if (!url.includes("youtube.com")) {
-      try {
-        const urlObj = new URL(url);
-        const ext = urlObj.pathname.split(".").pop();
-        const baseName = url.replace(`.${ext}`, "");
-        return `
-          ${baseName}-1024x576.${ext} 1024w,
-          ${baseName}-768x432.${ext} 768w,
-          ${baseName}-450x253.${ext} 450w
-        `;
-      } catch (e) {
-        return "";
-      }
-    }
-
-    return `
-      https://img.youtube.com/vi/${videoId}/sddefault.jpg 640w,
-      https://img.youtube.com/vi/${videoId}/hqdefault.jpg 480w,
-      https://img.youtube.com/vi/${videoId}/mqdefault.jpg 320w,
-      https://img.youtube.com/vi/${videoId}/default.jpg 120w
-    `;
-  };
-
-  const srcSet = getSrcSet(imageURL);
+  const srcSet = [
+    `https://img.youtube.com/vi/${videoId}/sddefault.jpg 640w`,
+    `https://img.youtube.com/vi/${videoId}/hqdefault.jpg 480w`,
+    `https://img.youtube.com/vi/${videoId}/mqdefault.jpg 320w`,
+    `https://img.youtube.com/vi/${videoId}/default.jpg 120w`
+  ].join(", ");
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -85,17 +66,21 @@ export default function save({ attributes }) {
         />
       </div>
 
-      {/* Fallback pour Googlebot */}
+      {/* Fallback pour Googlebot (uniquement video, sans iframe) */}
       <noscript>
-        <iframe
-          src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+        <video
+          controls
+          preload="none"
+          poster={imageURL}
           width="640"
           height="360"
-          frameBorder="0"
-          allowFullScreen
-        ></iframe>
+          style={{ width: "100%", height: "auto", aspectRatio: "16 / 9" }}
+        >
+          <source src="/wp-content/uploads/2025/04/video.mp4" type="video/mp4" />
+        </video>
       </noscript>
 
+      {/* Données structurées VideoObject */}
       <script type="application/ld+json">
         {JSON.stringify(structuredData)}
       </script>
