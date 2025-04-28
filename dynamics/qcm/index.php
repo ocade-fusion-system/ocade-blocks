@@ -43,7 +43,7 @@ function render_qcm($attributes) {
   <div <?php echo $wrapper_attributes; ?>>
     <p><strong><?php echo esc_html($question); ?></strong></p>
     <div class="qcm-options">
-      <?php foreach ($optionsSorted as $index => $item) :
+      <?php foreach ($optionsSorted as $item) :
         $inputId = $qcm_id . '-opt-' . $item['index'];
         $class = 'qcm-option';
         if ($item['isBonneReponse']) $class .= ' bonne-reponse';
@@ -76,22 +76,69 @@ function render_qcm($attributes) {
 <?php
   $html = ob_get_clean();
 
-  // JSON-LD – type Question seul (compatible avec la FAQ de Yoast)
+  // Préparation des données JSON-LD pour Google Search
+  $suggestedAnswers = array_map(function ($opt, $index) {
+    return [
+      "@type" => "Answer",
+      "text" => $opt,
+      "position" => $index,
+      "encodingFormat" => "text/html",
+      "comment" => [
+        "@type" => "Comment",
+        "text" => "Indice pour cette réponse."
+      ]
+    ];
+  }, $options, array_keys($options));
+
+
   $question_json = [
     "@context" => "https://schema.org",
-    "@type" => "Question",
+    "@type" => "Quiz",
     "name" => $question,
-    "acceptedAnswer" => [
-      "@type" => "Answer",
-      "text" => "La bonne réponse est : " . $options[0]
+    "about" => [
+      "@type" => "Thing",
+      "name" => "Thème général" // À personnaliser selon le sujet, ex: "Mathématiques"
+    ],
+    "typicalAgeRange" => "7-12", // À personnaliser
+    "educationalLevel" => "beginner", // À personnaliser (beginner / intermediate / advanced)
+    "hasPart" => [
+      "@type" => "Question",
+      "eduQuestionType" => "Multiple choice",
+      "learningResourceType" => "Practice problem",
+      "name" => $question,
+      "text" => $question,
+      "encodingFormat" => "text/html",
+      "comment" => [
+        "@type" => "Comment",
+        "text" => "Indice pour comprendre la question."
+      ],
+      "educationalAlignment" => [
+        [
+          "@type" => "AlignmentObject",
+          "alignmentType" => "educationalSubject",
+          "targetName" => "Intelligence artificielle"
+        ]
+      ],
+      "suggestedAnswer" => $suggestedAnswers,
+      "acceptedAnswer" => [
+        "@type" => "Answer",
+        "text" => $options[0],
+        "position" => 0,
+        "encodingFormat" => "text/html",
+        "comment" => [
+          "@type" => "Comment",
+          "text" => "C'est la bonne réponse car elle ajuste la créativité."
+        ]
+      ],
+      "assesses" => "Contrôle de la créativité dans les modèles de langage"
     ]
   ];
-  
-  $html .= '<script type="application/ld+json">' . wp_json_encode($question_json, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>';
-  
-  return $html;  
-}
 
+  // Insertion du JSON-LD dans la page
+  $html .= '<script type="application/ld+json">' . wp_json_encode($question_json, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>';
+
+  return $html;
+}
 
 function ocade_enqueue_qcm_index_js() {
   if (is_admin()) return;
@@ -110,7 +157,10 @@ function ocade_enqueue_qcm_index_js() {
 add_action('wp_enqueue_scripts', 'ocade_enqueue_qcm_index_js');
 
 function ocade_qcm_add_defer_attribute($tag, $handle) {
-  if ($handle === 'ocade-qcm-index-js') return str_replace('<script ', '<script defer ', $tag);
+  if ($handle === 'ocade-qcm-index-js') {
+    return str_replace('<script ', '<script defer ', $tag);
+  }
   return $tag;
 }
 add_filter('script_loader_tag', 'ocade_qcm_add_defer_attribute', 10, 2);
+?>
