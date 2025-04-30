@@ -372,14 +372,18 @@ function save({
     urlPageSite
   } = attributes;
   const blockProps = _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save();
-  const imageURL = customThumbnail ? customThumbnail : `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-  const srcSet = [`https://img.youtube.com/vi/${videoId}/sddefault.jpg 640w`, `https://img.youtube.com/vi/${videoId}/hqdefault.jpg 480w`, `https://img.youtube.com/vi/${videoId}/mqdefault.jpg 320w`, `https://img.youtube.com/vi/${videoId}/default.jpg 120w`].join(", ");
+
+  // Si un customThumbnail est fourni, on l'utilise, sinon on charge une version WebP de l'image de la vidéo
+  const imageURL = customThumbnail ? customThumbnail.replace(".webp", "-1024x576.webp") : `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+  const srcSet = customThumbnail ? [customThumbnail + " 128w",
+  // image d'origine utilisée pour la plus petite taille
+  customThumbnail.replace(".webp", "-450x253.webp") + " 450w", customThumbnail.replace(".webp", "-768x432.webp") + " 768w", customThumbnail.replace(".webp", "-1024x576.webp") + " 1024w"].join(", ") : [`https://img.youtube.com/vi/${videoId}/sddefault.jpg 640w`, `https://img.youtube.com/vi/${videoId}/hqdefault.jpg 480w`, `https://img.youtube.com/vi/${videoId}/mqdefault.jpg 320w`, `https://img.youtube.com/vi/${videoId}/default.jpg 120w`].join(", ");
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "VideoObject",
     name: videoTitle || "Titre de la vidéo",
     description: videoDescription || "Description de la vidéo non renseignée.",
-    thumbnailUrl: `https://img.youtube.com/vi/${videoId}/0.jpg`,
+    thumbnailUrl: `https://img.youtube.com/vi/${videoId}/0.webp`,
     uploadDate: videoDateCreation ? new Date(videoDateCreation).toISOString() : new Date().toISOString(),
     embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}`,
     contentUrl: urlPageSite || ""
