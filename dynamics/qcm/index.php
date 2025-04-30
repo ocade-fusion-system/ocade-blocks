@@ -129,10 +129,7 @@ function render_qcm($attributes) {
 			"@type" => "Comment",
 			"text" => "C'est la bonne réponse car elle ajuste la créativité."
 		  ],
-		  "answerExplanation" => [
-			"@type" => "WebContent",
-			"text" => "Cette réponse est correcte car elle ajuste la créativité du modèle via le paramètre approprié."
-		  ]
+		  "answerExplanation" => "Cette réponse est correcte car elle ajuste la créativité du modèle via le paramètre approprié."
 		],
       "assesses" => "Contrôle de la créativité dans les modèles de langage"
     ]
