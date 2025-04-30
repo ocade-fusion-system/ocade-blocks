@@ -121,15 +121,19 @@ function render_qcm($attributes) {
       ],
       "suggestedAnswer" => $suggestedAnswers,
       "acceptedAnswer" => [
-        "@type" => "Answer",
-        "text" => $options[0],
-        "position" => 0,
-        "encodingFormat" => "text/html",
-        "comment" => [
-          "@type" => "Comment",
-          "text" => "C'est la bonne réponse car elle ajuste la créativité."
-        ]
-      ],
+		  "@type" => "Answer",
+		  "text" => $options[0],
+		  "position" => 0,
+		  "encodingFormat" => "text/html",
+		  "comment" => [
+			"@type" => "Comment",
+			"text" => "C'est la bonne réponse car elle ajuste la créativité."
+		  ],
+		  "answerExplanation" => [
+			"@type" => "WebContent",
+			"text" => "Cette réponse est correcte car elle ajuste la créativité du modèle via le paramètre approprié."
+		  ]
+		],
       "assesses" => "Contrôle de la créativité dans les modèles de langage"
     ]
   ];
