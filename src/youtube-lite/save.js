@@ -76,18 +76,16 @@ const srcSet = customThumbnail
       </div>
 
       {/* Fallback pour Googlebot (uniquement vidéo, sans iframe) */}
-      <noscript>
-        <video
+		<video
           controls
           preload="none"
           poster={imageURL}
           width="640"
           height="360"
-          style={{ width: "100%", height: "auto", aspectRatio: "16 / 9" }}
+          style={{ width: "100%", height: "auto", aspectRatio: "16 / 9", display: "none" }}
         >
           <source src="/wp-content/uploads/2025/04/video.mp4" type="video/mp4" />
         </video>
-      </noscript>
 
       {/* Données structurées VideoObject */}
       <script type="application/ld+json">

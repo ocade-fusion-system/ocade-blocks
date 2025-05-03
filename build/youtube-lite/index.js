@@ -410,7 +410,7 @@ function save({
       objectFit: "cover",
       aspectRatio: "16 / 9"
     }
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("noscript", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("video", {
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("video", {
     controls: true,
     preload: "none",
     poster: imageURL,
@@ -419,12 +419,13 @@ function save({
     style: {
       width: "100%",
       height: "auto",
-      aspectRatio: "16 / 9"
+      aspectRatio: "16 / 9",
+      display: "none"
     }
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("source", {
     src: "/wp-content/uploads/2025/04/video.mp4",
     type: "video/mp4"
-  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("script", {
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("script", {
     type: "application/ld+json"
   }, JSON.stringify(structuredData)));
 }
