@@ -110,3 +110,47 @@ function ocade_async_glossaire_script($tag, $handle) {
   if ('glossaire-filter-script' === $handle) return str_replace(' src', ' defer src', $tag);
   return $tag;
 }
+
+/****************** SUPPRIMER LES LIENS PREVIOUS NEXT REL Yoast car basé sur /page/X et non page=X **************/
+add_filter('wpseo_next_rel_link', '__return_false');
+add_filter('wpseo_prev_rel_link', '__return_false');
+
+/****************** AJOUTER LES PREVIOUS NEXT PAGINATION **************/
+add_action('wp_head', function () {
+  global $post;
+
+  // Détection de la pagination actuelle
+  $paged = max(1, intval(get_query_var('paged') ?: get_query_var('page') ?: $_GET['page'] ?? 1));
+
+  // Nombre d’articles par page (doit correspondre à ton bloc)
+  $posts_per_page = 4;
+
+  // Base URL de la page courante
+  $base_url = '';
+
+  // Détection du contexte actuel
+  if (is_front_page() || is_home()) {
+    // Accueil ou page blog personnalisée
+    $total_posts = wp_count_posts('post')->publish;
+    $base_url = get_permalink(get_option('page_on_front'));
+  } elseif (isset($post) && $post instanceof WP_Post && $post->post_name === 'actualites') {
+    // Page actualités personnalisée
+    $total_posts = wp_count_posts('post')->publish;
+    $base_url = get_permalink($post);
+  } elseif (is_category()) {
+    $term = get_queried_object();
+    $total_posts = $term->count;
+    $base_url = get_term_link($term);
+  } elseif (is_tag()) {
+    $term = get_queried_object();
+    $total_posts = $term->count;
+    $base_url = get_term_link($term);
+  }
+
+  // Calcul du nombre total de pages
+  if (!empty($total_posts) && !empty($base_url)) {
+    $total_pages = ceil($total_posts / $posts_per_page);
+    if ($paged > 1) echo '<link rel="prev" href="' . esc_url(add_query_arg('page', $paged - 1, $base_url)) . '">' . "\n";
+    if ($paged < $total_pages) echo '<link rel="next" href="' . esc_url(add_query_arg('page', $paged + 1, $base_url)) . '">' . "\n";
+  }
+});
