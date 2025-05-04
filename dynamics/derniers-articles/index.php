@@ -7,7 +7,8 @@
  * @return WP_Query
  */
 function ocadefusion_get_recent_articles_query($nombre_articles = 10) {
-  $paged = max(1, intval(get_query_var('page') ?: $_GET['page'] ?? 1));
+  $paged = intval(get_query_var('pg'));
+  if (empty($paged) || $paged < 1) $paged = 1;
 
   $args = [
     'post_type'      => 'post',
@@ -321,18 +322,30 @@ function render_derniers_articles($attributes) {
   </ul>
 
   <?php
-  $big = 999999999; // Un nombre fictif pour la réécriture d’URL
+  // Récupère la page actuelle depuis la variable personnalisée "pg"
+  $paged = intval(get_query_var('pg'));
+  if ($paged < 1) {
+    $paged = 1;
+  }
+
+  // Affiche la pagination
   echo '<nav class="pagination" aria-label="Pagination">';
   echo paginate_links([
-    'base'    => add_query_arg('page', '%#%'),
-    'format'  => '',
-    'current' => max(1, intval(get_query_var('page') ?: $_GET['page'] ?? 1)),
-    'total'     => $query->max_num_pages,
-    'prev_text' => __('&laquo; Précédent', 'ocade'),
-    'next_text' => __('Suivant &raquo;', 'ocade'),
-    'type'      => 'list'
+    'base'         => add_query_arg('pg', '%#%'),
+    'format'       => '',
+    'current'      => $paged,
+    'total'        => $query->max_num_pages,
+    'prev_text'    => __('&laquo; Précédent', 'ocade'),
+    'next_text'    => __('Suivant &raquo;', 'ocade'),
+    'type'         => 'list',
+    'show_all'     => false,
+    'end_size'     => 1,
+    'mid_size'     => 1,
+    'add_args'     => false,
+    'add_fragment' => '',
   ]);
   echo '</nav>';
+
   ?>
 
 <?php
