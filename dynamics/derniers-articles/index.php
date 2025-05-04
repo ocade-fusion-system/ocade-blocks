@@ -7,12 +7,15 @@
  * @return WP_Query
  */
 function ocadefusion_get_recent_articles_query($nombre_articles = 10) {
+  $paged = max(1, intval(get_query_var('page') ?: $_GET['page'] ?? 1));
+
   $args = [
     'post_type'      => 'post',
     'posts_per_page' => $nombre_articles,
     'orderby'        => 'date',
     'order'          => 'DESC',
     'post_status'    => 'publish',
+    'paged'          => $paged,
   ];
 
   if (is_category()) {
@@ -32,17 +35,218 @@ function render_derniers_articles($attributes) {
   extract($attributes);
   $wrapper_attributes = get_block_wrapper_attributes();
 
-  $nombre_articles = 10;
+  $nombre_articles = 4;
   $query = ocadefusion_get_recent_articles_query($nombre_articles);
 
   if (!$query->have_posts()) return '';
 
   ob_start();
 ?>
-<!-- LCP LIGHOUSE -->
-<style>
-.editor-styles-wrapper .wp-block-ocade-blocks-derniers-articles{padding:5rem 1rem;background-color:var(--wp--preset--color--violet-clair);text-align:center}.wp-block-ocade-blocks-derniers-articles{display:flex;justify-content:space-evenly;align-items:stretch;gap:1rem;flex-wrap:wrap;padding-left:.5rem;padding-right:.5rem;list-style-type:none}.wp-block-ocade-blocks-derniers-articles li{width:100%;max-width:450px}.wp-block-ocade-blocks-derniers-articles figure{overflow:hidden;aspect-ratio:16/9;display:flex;justify-content:center;align-items:center;max-width:450px;margin-bottom:0;border-radius:10px;box-shadow:rgba(0,0,0,.15) 0 1px 5px}.wp-block-ocade-blocks-derniers-articles figure img{width:100%;height:auto}.wp-block-ocade-blocks-derniers-articles .figure-link+div{position:relative;top:-2rem;max-width:380px;margin-left:auto;margin-right:auto;padding:.5rem 1rem;background:#fff;border-left:1px solid var(--wp--preset--color--gris);border-right:1px solid var(--wp--preset--color--gris);border-bottom:1px solid var(--wp--preset--color--gris);border-radius:0 0 4px 4px}@media (min-width:460px){.wp-block-ocade-blocks-derniers-articles .figure-link+div{margin-left:auto;margin-right:auto}}@media (min-width:1280px){.wp-block-ocade-blocks-derniers-articles .figure-link+div{margin-left:2rem;margin-right:2rem}}.wp-block-ocade-blocks-derniers-articles .figure-link+div::after{content:"";position:absolute;top:-1.3rem;left:0;width:calc(100% + 0px);height:40px;background-color:#fff;mask-size:216px 40px;mask-repeat:repeat;mask-position:-10px}.wp-block-ocade-blocks-derniers-articles header{z-index:0;padding:0;background-color:inherit}.wp-block-ocade-blocks-derniers-articles header a,.wp-block-ocade-blocks-derniers-articles header time{color:var(--wp--preset--color--violet);font-size:1rem;text-decoration-thickness:1px}.wp-block-ocade-blocks-derniers-articles h3{margin-top:1rem;margin-bottom:.5rem}.wp-block-ocade-blocks-derniers-articles .news-tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}.wp-block-ocade-blocks-derniers-articles .news-tags a{padding:.25rem 1rem;color:#fff;background-color:var(--wp--preset--color--orange);border-radius:4px;text-decoration-color:var(--wp--preset--color--orange)}.wp-block-ocade-blocks-derniers-articles .news-tags a:hover{color:var(--wp--preset--color--orange);background-color:var(--wp--preset--color--gris-clair)}.wp-block-ocade-blocks-derniers-articles footer{margin-top:2rem;margin-bottom:1rem}.wp-block-ocade-blocks-derniers-articles footer a{display:inline-flex;align-items:center;font-weight:600;text-transform:uppercase;text-decoration:none;word-spacing:0.1rem}.wp-block-ocade-blocks-derniers-articles footer a:hover{text-decoration:underline;text-decoration-thickness:2px;text-decoration-color:var(--wp--preset--color--orange)}.wp-block-ocade-blocks-derniers-articles footer a::before{content:"";position:relative;top:0;display:inline-block;width:2.5rem;height:2.5rem;margin-right:1rem;background-color:var(--wp--preset--color--orange);mask-size:contain;mask-repeat:no-repeat}
-</style>
+  <!-- LCP LIGHOUSE -->
+  <style>
+    .editor-styles-wrapper .wp-block-ocade-blocks-derniers-articles {
+      padding: 5rem 1rem;
+      background-color: var(--wp--preset--color--violet-clair);
+      text-align: center
+    }
+
+    .wp-block-ocade-blocks-derniers-articles {
+      display: flex;
+      justify-content: space-evenly;
+      align-items: stretch;
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding-left: .5rem;
+      padding-right: .5rem;
+      list-style-type: none
+    }
+
+    .wp-block-ocade-blocks-derniers-articles li {
+      width: 100%;
+      max-width: 450px
+    }
+
+    .wp-block-ocade-blocks-derniers-articles figure {
+      overflow: hidden;
+      aspect-ratio: 16/9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      max-width: 450px;
+      margin-bottom: 0;
+      border-radius: 10px;
+      box-shadow: rgba(0, 0, 0, .15) 0 1px 5px
+    }
+
+    .wp-block-ocade-blocks-derniers-articles figure img {
+      width: 100%;
+      height: auto
+    }
+
+    .wp-block-ocade-blocks-derniers-articles .figure-link+div {
+      position: relative;
+      top: -2rem;
+      max-width: 380px;
+      min-height: 380px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: .5rem 1rem;
+      background: #fff;
+      border-left: 1px solid var(--wp--preset--color--gris);
+      border-right: 1px solid var(--wp--preset--color--gris);
+      border-bottom: 1px solid var(--wp--preset--color--gris);
+      border-radius: 0 0 4px 4px
+    }
+
+    @media (min-width:460px) {
+      .wp-block-ocade-blocks-derniers-articles .figure-link+div {
+        margin-left: auto;
+        margin-right: auto
+      }
+    }
+
+    @media (min-width:1280px) {
+      .wp-block-ocade-blocks-derniers-articles .figure-link+div {
+        margin-left: 2rem;
+        margin-right: 2rem
+      }
+    }
+
+    .wp-block-ocade-blocks-derniers-articles .figure-link+div::after {
+      content: "";
+      position: absolute;
+      top: -1.3rem;
+      left: 0;
+      width: calc(100% + 0px);
+      height: 40px;
+      background-color: #fff;
+      mask-size: 216px 40px;
+      mask-repeat: repeat;
+      mask-position: -10px
+    }
+
+    .wp-block-ocade-blocks-derniers-articles header {
+      z-index: 0;
+      padding: 0;
+      background-color: inherit
+    }
+
+    .wp-block-ocade-blocks-derniers-articles header a,
+    .wp-block-ocade-blocks-derniers-articles header time {
+      color: var(--wp--preset--color--violet);
+      font-size: 1rem;
+      text-decoration-thickness: 1px
+    }
+
+    .wp-block-ocade-blocks-derniers-articles h3 {
+      margin-top: 1rem;
+      margin-bottom: .5rem
+    }
+
+    .wp-block-ocade-blocks-derniers-articles .news-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-top: 1rem
+    }
+
+    .wp-block-ocade-blocks-derniers-articles .news-tags a {
+      padding: .25rem 1rem;
+      color: #fff;
+      background-color: var(--wp--preset--color--orange);
+      border-radius: 4px;
+      text-decoration-color: var(--wp--preset--color--orange)
+    }
+
+    .wp-block-ocade-blocks-derniers-articles .news-tags a:hover {
+      color: var(--wp--preset--color--orange);
+      background-color: var(--wp--preset--color--gris-clair)
+    }
+
+    .wp-block-ocade-blocks-derniers-articles footer {
+      margin-top: 2rem;
+      margin-bottom: 1rem
+    }
+
+    .wp-block-ocade-blocks-derniers-articles footer a {
+      display: inline-flex;
+      align-items: center;
+      font-weight: 600;
+      text-transform: uppercase;
+      text-decoration: none;
+      word-spacing: 0.1rem
+    }
+
+    .wp-block-ocade-blocks-derniers-articles footer a:hover {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-decoration-color: var(--wp--preset--color--orange)
+    }
+
+    .wp-block-ocade-blocks-derniers-articles footer a::before {
+      content: "";
+      position: relative;
+      top: 0;
+      display: inline-block;
+      width: 2.5rem;
+      height: 2.5rem;
+      margin-right: 1rem;
+      background-color: var(--wp--preset--color--orange);
+      mask-size: contain;
+      mask-repeat: no-repeat
+    }
+
+
+    .pagination {
+      margin-bottom: 2rem;
+      text-align: center;
+      width: 100%;
+    }
+
+    .pagination ul {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      align-items: center;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .pagination li {
+      margin: 0;
+      padding: 0;
+    }
+
+    .pagination li a,
+    .pagination li span {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--wp--preset--color--gris, #ccc);
+      border-radius: 4px;
+      text-decoration: none;
+      color: inherit;
+      background-color: #fff;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .pagination li .current {
+      font-weight: bold;
+      background-color: var(--wp--preset--color--violet-clair, #eee);
+      pointer-events: none;
+    }
+
+    .pagination li a:hover {
+      background-color: var(--wp--preset--color--gris-clair, #f2f2f2);
+      border-color: var(--wp--preset--color--gris-fonce, #999);
+    }
+
+    .pagination li a:focus {
+      outline: 2px solid var(--wp--preset--color--orange, orange);
+      outline-offset: 2px;
+    }
+  </style>
 
 
   <ul <?= $wrapper_attributes; ?>>
@@ -112,8 +316,25 @@ function render_derniers_articles($attributes) {
         </article>
       </li>
     <?php $index++;
-    endwhile; ?>
+    endwhile;
+    ?>
   </ul>
+
+  <?php
+  $big = 999999999; // Un nombre fictif pour la réécriture d’URL
+  echo '<nav class="pagination" aria-label="Pagination">';
+  echo paginate_links([
+    'base'    => add_query_arg('page', '%#%'),
+    'format'  => '',
+    'current' => max(1, intval(get_query_var('page') ?: $_GET['page'] ?? 1)),
+    'total'     => $query->max_num_pages,
+    'prev_text' => __('&laquo; Précédent', 'ocade'),
+    'next_text' => __('Suivant &raquo;', 'ocade'),
+    'type'      => 'list'
+  ]);
+  echo '</nav>';
+  ?>
+
 <?php
   wp_reset_postdata();
   return ob_get_clean();
