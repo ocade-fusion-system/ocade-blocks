@@ -124,7 +124,7 @@ add_action('wp_head', function () {
   if (empty($paged) || $paged < 1) $paged = 1;
 
   // Nombre d’articles par page (doit correspondre à ton bloc)
-  $posts_per_page = 4;
+  $posts_per_page = 3;
 
   // Base URL de la page courante
   $base_url = '';
