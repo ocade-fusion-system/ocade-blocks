@@ -155,7 +155,3 @@ add_action('wp_head', function () {
     if ($paged < $total_pages) echo '<link rel="next" href="' . esc_url(add_query_arg('page', $paged + 1, $base_url)) . '">' . "\n";
   }
 });
-add_filter('query_vars', function ($vars) {
-  $vars[] = 'pg'; // nouvelle variable de pagination
-  return $vars;
-});
