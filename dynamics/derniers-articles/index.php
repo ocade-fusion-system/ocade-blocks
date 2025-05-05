@@ -4,6 +4,7 @@
  * Retourne une WP_Query pour les derniers articles avec filtres dynamiques.
  *
  * @param int $nombre_articles Nombre d'articles à récupérer
+ * @param int $paged Numéro de page
  * @return WP_Query
  */
 function ocadefusion_get_recent_articles_query($nombre_articles = 10, $paged = 1) {
@@ -33,14 +34,13 @@ function render_derniers_articles($attributes) {
   extract($attributes);
   $wrapper_attributes = get_block_wrapper_attributes();
 
-  $nombre_articles = 4;
-  $paged = filter_input(INPUT_GET, 'ocade_page', FILTER_VALIDATE_INT) ?: 1;
+  $nombre_articles = 10;
+  $paged = get_query_var('paged') ?: 1;
 
   $query = ocadefusion_get_recent_articles_query($nombre_articles, $paged);
 
   ob_start();
-  if ($query->have_posts()) :
-?>
+  if ($query->have_posts()) : ?>
     <!-- LCP LIGHOUSE -->
     <style>
       .editor-styles-wrapper .wp-block-ocade-blocks-derniers-articles {
@@ -246,14 +246,10 @@ function render_derniers_articles($attributes) {
         outline-offset: 2px;
       }
     </style>
-
-
     <ul <?= $wrapper_attributes; ?>>
       <?php
       $index = 0;
       while ($query->have_posts()) : $query->the_post();
-
-        // Récupère les infos de l’image (format medium)
         $image_id = get_post_thumbnail_id();
         $image_src = wp_get_attachment_image_src($image_id, 'medium');
         $image_alt = esc_attr(get_post_meta($image_id, '_wp_attachment_image_alt', true));
@@ -264,7 +260,6 @@ function render_derniers_articles($attributes) {
               <figure>
                 <?php if ($image_src) : ?>
                   <?php
-                  // Par défaut (mobile-friendly)
                   $img_class = ($index < 2) ? 'image-priority' : 'image-lazy';
                   $loading = ($index < 2) ? 'eager' : 'lazy';
                   $priority = ($index < 2) ? 'high' : 'low';
@@ -315,60 +310,29 @@ function render_derniers_articles($attributes) {
           </article>
         </li>
       <?php $index++;
-      endwhile;
-      ?>
+      endwhile; ?>
     </ul>
   <?php else : ?>
     <p>Aucun article trouvé pour cette page.</p>
-  <?php endif;
+<?php endif;
 
-  // Récupère la page actuelle depuis la variable personnalisée "page"
-  $paged = isset($_GET['ocade_page']) && is_numeric($_GET['ocade_page']) ? (int) $_GET['ocade_page'] : 1;
-
-  // Affiche la pagination
   echo '<nav class="pagination" aria-label="Pagination">';
   echo paginate_links([
-    // Base de l'URL de chaque lien de pagination, %#% sera remplacé par le numéro de page
-    'base' => esc_url_raw(add_query_arg('ocade_page', '%#%')),
-
-    // Format de la pagination (souvent vide car inclus dans 'base')
+    'base'         => trailingslashit(get_pagenum_link(1)) . 'page/%#%/',
     'format'       => '',
-
-    // Page courante (doit correspondre à la variable $paged utilisée dans WP_Query)
-    'current'      => $paged,
-
-    // Nombre total de pages disponibles (généralement obtenu depuis $query->max_num_pages)
+    'current'      => max(1, get_query_var('paged')),
     'total'        => $query->max_num_pages,
-
-    // Texte du lien vers la page précédente
     'prev_text'    => __('&laquo; Précédent', 'ocade'),
-
-    // Texte du lien vers la page suivante
     'next_text'    => __('Suivant &raquo;', 'ocade'),
-
-    // Type de sortie, ici 'list' pour une liste HTML <ul><li>
     'type'         => 'list',
-
-    // Affiche toutes les pages si true, sinon affiche un résumé avec "..."
     'show_all'     => false,
-
-    // Nombre de pages visibles aux extrémités (début et fin de pagination)
     'end_size'     => 1,
-
-    // Nombre de pages visibles autour de la page courante
     'mid_size'     => 1,
-
-    // Permet d’ajouter des arguments supplémentaires à l’URL
     'add_args'     => false,
-
-    // Permet d’ajouter un fragment (ancre) à la fin de chaque lien
     'add_fragment' => '',
   ]);
-
   echo '</nav>';
 
-  ?>
-
-<?php
+  wp_reset_postdata();
   return ob_get_clean();
 }

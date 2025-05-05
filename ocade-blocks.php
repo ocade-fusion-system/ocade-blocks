@@ -117,41 +117,14 @@ add_filter('wpseo_prev_rel_link', '__return_false');
 
 /****************** AJOUTER LES PREVIOUS NEXT PAGINATION **************/
 add_action('wp_head', function () {
-  global $post;
+  global $wp_query;
 
-  // Détection de la pagination actuelle
-  $paged = intval(get_query_var('pg'));
-  if (empty($paged) || $paged < 1) $paged = 1;
+  $paged = get_query_var('paged') ?: 1;
+  $max_pages = $wp_query->max_num_pages;
+  $base_url = get_pagenum_link(1); // URL sans /page/...
 
-  // Nombre d’articles par page (doit correspondre à ton bloc)
-  $posts_per_page = 3;
-
-  // Base URL de la page courante
-  $base_url = '';
-
-  // Détection du contexte actuel
-  if (is_front_page() || is_home()) {
-    // Accueil ou page blog personnalisée
-    $total_posts = wp_count_posts('post')->publish;
-    $base_url = get_permalink(get_option('page_on_front'));
-  } elseif (isset($post) && $post instanceof WP_Post && $post->post_name === 'actualites') {
-    // Page actualités personnalisée
-    $total_posts = wp_count_posts('post')->publish;
-    $base_url = get_permalink($post);
-  } elseif (is_category()) {
-    $term = get_queried_object();
-    $total_posts = $term->count;
-    $base_url = get_term_link($term);
-  } elseif (is_tag()) {
-    $term = get_queried_object();
-    $total_posts = $term->count;
-    $base_url = get_term_link($term);
-  }
-
-  // Calcul du nombre total de pages
-  if (!empty($total_posts) && !empty($base_url)) {
-    $total_pages = ceil($total_posts / $posts_per_page);
-    if ($paged > 1) echo '<link rel="prev" href="' . esc_url(add_query_arg('pg', $paged - 1, $base_url)) . '">' . "\n";
-    if ($paged < $total_pages) echo '<link rel="next" href="' . esc_url(add_query_arg('page', $paged + 1, $base_url)) . '">' . "\n";
+  if ($max_pages > 1) {
+    if ($paged > 1) echo '<link rel="prev" href="' . esc_url(trailingslashit($base_url) . 'page/' . ($paged - 1) . '/') . '">' . "\n";
+    if ($paged < $max_pages) echo '<link rel="next" href="' . esc_url(trailingslashit($base_url) . 'page/' . ($paged + 1) . '/') . '">' . "\n";
   }
 });
