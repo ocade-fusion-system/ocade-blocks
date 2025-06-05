@@ -128,3 +128,20 @@ add_action('wp_head', function () {
     if ($paged < $max_pages) echo '<link rel="next" href="' . esc_url(trailingslashit($base_url) . 'page/' . ($paged + 1) . '/') . '">' . "\n";
   }
 });
+
+// Corriger le bug de la pagination /page/3 et plus...
+add_action('pre_get_posts', function ($query) {
+  if (!is_admin() && $query->is_main_query()) {
+    $nombre_articles_par_page = 9; // Nombre d'articles par page
+    // Page d'accueil du blog
+    if (is_home()) {
+      $query->set('post_type', 'post');
+      $query->set('posts_per_page', $nombre_articles_par_page);
+    }
+    // Archives de tags
+    if (is_tag()) $query->set('posts_per_page', $nombre_articles_par_page);
+
+    // Archives de catégories
+    if (is_category()) $query->set('posts_per_page', $nombre_articles_par_page);
+  }
+});

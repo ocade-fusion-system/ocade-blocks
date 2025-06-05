@@ -34,7 +34,7 @@ function render_derniers_articles($attributes) {
   extract($attributes);
   $wrapper_attributes = get_block_wrapper_attributes();
 
-  $nombre_articles = 10;
+  $nombre_articles = 9;
   $paged = get_query_var('paged') ?: 1;
 
   $query = ocadefusion_get_recent_articles_query($nombre_articles, $paged);
