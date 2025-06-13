@@ -111,22 +111,31 @@ function ocade_async_glossaire_script($tag, $handle) {
   return $tag;
 }
 
-/****************** SUPPRIMER LES LIENS PREVIOUS NEXT REL Yoast car basé sur /page/X et non page=X **************/
-add_filter('wpseo_next_rel_link', '__return_false');
-add_filter('wpseo_prev_rel_link', '__return_false');
 
 /****************** AJOUTER LES PREVIOUS NEXT PAGINATION **************/
-add_action('wp_head', function () {
-  global $wp_query;
-
-  $paged = get_query_var('paged') ?: 1;
-  $max_pages = $wp_query->max_num_pages;
-  $base_url = get_pagenum_link(1); // URL sans /page/...
-
-  if ($max_pages > 1) {
-    if ($paged > 1) echo '<link rel="prev" href="' . esc_url(trailingslashit($base_url) . 'page/' . ($paged - 1) . '/') . '">' . "\n";
-    if ($paged < $max_pages) echo '<link rel="next" href="' . esc_url(trailingslashit($base_url) . 'page/' . ($paged + 1) . '/') . '">' . "\n";
+// Ajoute l'attribut NEXT
+add_filter('wpseo_next_rel_link', function($link){
+  $paged = get_query_var('paged');
+  $max = $GLOBALS['wp_query']->max_num_pages;
+  if ($paged < $max) {
+    $next = get_pagenum_link($paged + 1);
+    return '<link rel="next" href="' . esc_url($next) . '" />' . "\n";
   }
+  return '';
+});
+// Ajoute l'attribut PREV
+add_filter('wpseo_prev_rel_link', function($link){
+  $paged = get_query_var('paged');
+  if ($paged > 1) {
+    $prev = get_pagenum_link($paged - 1);
+    return '<link rel="prev" href="' . esc_url($prev) . '" />' . "\n";
+  }
+  return '';
+});
+// Forcer la canonical sans la page /X
+add_filter('wpseo_canonical', function($canonical){
+  if (is_paged()) return get_pagenum_link(1);
+  return $canonical;
 });
 
 // Corriger le bug de la pagination /page/3 et plus...
