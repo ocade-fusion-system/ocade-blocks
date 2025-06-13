@@ -132,11 +132,6 @@ add_filter('wpseo_prev_rel_link', function($link){
   }
   return '';
 });
-// Forcer la canonical sans la page /X
-add_filter('wpseo_canonical', function($canonical){
-  if (is_paged()) return get_pagenum_link(1);
-  return $canonical;
-});
 
 // Corriger le bug de la pagination /page/3 et plus...
 add_action('pre_get_posts', function ($query) {
