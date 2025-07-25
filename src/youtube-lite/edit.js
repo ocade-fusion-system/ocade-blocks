@@ -9,7 +9,7 @@ import PreviewSVG from "./icon.svg";
 export default function Edit(props) {
   const { attributes, setAttributes } = props;
   const { preview } = attributes;
-
+ 
   const blockProps = useBlockProps();
 
   if (preview)

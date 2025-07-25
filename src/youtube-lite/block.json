@@ -11,6 +11,7 @@
   "style": "file:./style-index.css",
   "supports": {
     "anchor": true,
+    "html": true,
     "align": ["wide", "full"],
     "defaultAlign": "wide"
   },
